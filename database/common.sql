@@ -5,8 +5,8 @@ SET FOREIGN_KEY_CHECKS=0;
 --  Create Database
 --
 
-CREATE DATABASE IF NOT EXISTS `citizen`;
-USE `citizen`;
+CREATE DATABASE IF NOT EXISTS `common`;
+USE `common`;
 
 --
 -- Create table for `images`
@@ -16,10 +16,14 @@ DROP TABLE IF EXISTS `images`;
 
 CREATE TABLE `images` (
   `iid` int NOT NULL AUTO_INCREMENT,
+  `observation` int,
+  `project` int,
   `file_name` tinytext NOT NULL,
   `file_type` tinytext NOT NULL,
   `file_path` text NOT NULL,
-  PRIMARY KEY (`iid`)
+  PRIMARY KEY (`iid`),
+  CONSTRAINT `img_fk1` FOREIGN KEY (`observation`) REFERENCES `observations` (`oid`), 
+  CONSTRAINT `img_fk2` FOREIGN KEY (`project`) REFERENCES `projects` (`pid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -33,9 +37,7 @@ CREATE TABLE `projects` (
   `type` text NOT NULL,
   `title` tinytext NOT NULL,
   `description` mediumtext NOT NULL,
-  `banner` int,
-  PRIMARY KEY (`pid`),
-  CONSTRAINT `project_fk1` FOREIGN KEY (`banner`) REFERENCES `images` (`iid`)
+  PRIMARY KEY (`pid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -46,15 +48,13 @@ DROP TABLE IF EXISTS `observations`;
 
 CREATE TABLE `observations` (
   `oid` int NOT NULL AUTO_INCREMENT,
-  `project_id` int NOT NULL,
+  `project_id` int,
   `date` datetime NOT NULL,
   `title` tinytext NOT NULL,
   `notes` text NOT NULL,
   `measurements` text,
-  `latitude` float(7, 4) NOT NULL,
-  `longitude` float(7, 4) NOT NULL,
-  `images` int DEFAULT NULL,
+  `latitude` float(7, 4),
+  `longitude` float(7, 4),
   PRIMARY KEY (`oid`),
-  CONSTRAINT `obs_fk1` FOREIGN KEY (`project_id`) REFERENCES `projects` (`pid`),
-  CONSTRAINT `obs_fk3` FOREIGN KEY (`images`) REFERENCES `images` (`iid`)
+  CONSTRAINT `obs_fk1` FOREIGN KEY (`project_id`) REFERENCES `projects` (`pid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
