@@ -22,8 +22,8 @@ CREATE TABLE `images` (
   `file_type` tinytext NOT NULL,
   `file_path` text NOT NULL,
   PRIMARY KEY (`iid`),
-  CONSTRAINT `img_fk1` FOREIGN KEY (`observation`) REFERENCES `observations` (`oid`), 
-  CONSTRAINT `img_fk2` FOREIGN KEY (`project`) REFERENCES `projects` (`pid`)
+  CONSTRAINT `img_fk1` FOREIGN KEY (`observation`) REFERENCES `observations` (`oid`) ON DELETE CASCADE, 
+  CONSTRAINT `img_fk2` FOREIGN KEY (`project`) REFERENCES `projects` (`pid`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -56,5 +56,5 @@ CREATE TABLE `observations` (
   `latitude` float(7, 4),
   `longitude` float(7, 4),
   PRIMARY KEY (`oid`),
-  CONSTRAINT `obs_fk1` FOREIGN KEY (`project_id`) REFERENCES `projects` (`pid`)
+  CONSTRAINT `obs_fk1` FOREIGN KEY (`project_id`) REFERENCES `projects` (`pid`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
