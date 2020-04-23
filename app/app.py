@@ -1,4 +1,6 @@
 from flask import Flask, request, make_response, Blueprint
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from api.ProjectsAPI import projects_api
 from api.ObservationsAPI import observations_api
 from api.functions.dbconnection import *
@@ -26,6 +28,12 @@ def create_app():
     return app
 
 app = create_app()
+
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=["100 per day"],
+)
 
 @app.route("/")
 def root():
