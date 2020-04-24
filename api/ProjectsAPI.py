@@ -1,8 +1,8 @@
 from flask import Flask, Blueprint, request, make_response
 from json2html import *
 import json
-from functions.dbconnection import *
-from functions.validation import *
+from api.functions.dbconnection import *
+from api.functions.validation import *
 
 projects_api = Blueprint('projects_api', __name__)
 

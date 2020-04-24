@@ -7,10 +7,10 @@ def dbconnect():
     try:
         # Open Data Base Conneection
         connection = mysql.connector.connect(
-            user = os.getenv("DBUSER"),
-            password = os.getenv("DBPW"),
-            host = '127.0.0.1',
-            database = 'common',
+            user        = os.getenv("DBUSER"),
+            password    = os.getenv("DBPW"),
+            host        = os.getenv("DBHOST"),
+            database    = 'common',
             auth_plugin = 'mysql_native_password'
         )
         if connection:

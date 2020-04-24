@@ -1,10 +1,12 @@
-
 from flask import Flask, request, make_response, Blueprint
-from ProjectsAPI import projects_api
-from ObservationsAPI import observations_api
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from api.ProjectsAPI import projects_api
+from api.ObservationsAPI import observations_api
+from api.functions.dbconnection import *
 from json2html import *
 import json
-from functions.dbconnection import *
+from frontend.views import mod
 
 ## ----------------------------------------------------------------------------------------##
 ## Code Reference Credit
@@ -18,10 +20,20 @@ from functions.dbconnection import *
 ##
 ## ----------------------------------------------------------------------------------------##
 
+def create_app():
+    app = Flask(__name__, template_folder='template')
+    app.register_blueprint(projects_api)
+    app.register_blueprint(observations_api)
+    app.register_blueprint(mod)
+    return app
 
-app = Flask(__name__)
-app.register_blueprint(projects_api)
-app.register_blueprint(observations_api)
+app = create_app()
+
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=["100 per day"],
+)
 
 @app.route("/")
 def root():
