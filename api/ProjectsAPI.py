@@ -1,8 +1,14 @@
 from flask import Flask, Blueprint, request, make_response
 from json2html import *
 import json
+<<<<<<< Updated upstream
 from api.functions.dbconnection import *
 from api.functions.validation import *
+=======
+from functions.utilities import *
+from functions.validation import *
+from functions.helpers import *
+>>>>>>> Stashed changes
 
 projects_api = Blueprint('projects_api', __name__)
 
@@ -10,7 +16,7 @@ projects_api = Blueprint('projects_api', __name__)
 ## Projects ENDPOINT Glossary
 ## --------------------------------------------------------------------##
 ##
-## Create a Project                             POST /projects
+## Create a Project                             POST /api/projects
 ## View a Project                               GET /projects/<pid>
 ## View all Project                             GET /projects
 ## Edit a Project                               PATCH /projects/<pid>
@@ -32,102 +38,123 @@ msg_none = json.dumps({"Error": "No asset exists with that ID"}, indent=4, separ
 ## -------------------------------------------##
 ## Create a Project
 ## -------------------------------------------##
-@projects_api.route('/projects', methods=['POST'])
+@projects_api.route('/api/projects', methods=['POST'])
 def createProject():
 
-    ## Check for valid content-type
     if request.content_type != "application/json":
-        rsp_json = make_response(msg_content_type)
-        rsp_json.headers.set('Content-Type', 'application/json')
-        return (rsp_json, 406)
-    ## Check for valid accept-type
+        return(makeResponse(msg_content_type), 406)
     elif 'application/json' not in request.accept_mimetypes:
-        rsp_json = make_response(msg_accept_type)
-        rsp_json.headers.set('Content-Type', 'application/json')
-        return (rsp_json, 406)
+        return(makeResponse(msg_accept_type), 406)
     else:
         try:
             # Get request information
             content = request.get_json()
             
-            # Check for All Required Attributes & Validate
+            # Check for All Required Project Attributes & Validate
             try:
                 if content["type"] and content["title"] and content["description"]:
                     if not validateAllProjectData(content):
-                        rsp_json = make_response(msg_invl)
-                        rsp_json.headers.set('Content-Type', 'application/json')
-                        return(rsp_json, 400)
+                        return(makeResponse(msg_invl), 400)
             except:
-                rsp_json = make_response(msg_miss)
-                rsp_json.headers.set('Content-Type', 'application/json')
-                return (rsp_json, 400)
+                return(makeResponse(msg_miss), 400)
 
+            # Check for All Required Image Attributes & Validate
+            image = False
+            try:
+                if content["image"]:
+                    try:
+                        if content["image"]["file_name"] and content["image"]["file_type"] and content["image"]["file_path"]:
+                            if not validateImage(content["image"]):
+                                return(makeResponse(msg_invl), 400)
+                            else:
+                                image = True
+                    except:
+                        return(makeResponse(msg_miss), 400)
+            except:
+                pass
+            
             # Check for Uniqueness of Title
-            con = dbconnect()
-            cursor = con.cursor()
-            uniq = ("SELECT title from projects "
-                    " WHERE title = '" + content["title"] + "';")
-            cursor.execute(uniq)
-            results = cursor.fetchall()
-
-            # If results returned, then not unique
-            if len(results) > 0:
-                cursor.close()
-                disconnect(con)
-                rsp_json = make_response(msg_uniq)
-                rsp_json.headers.set('Content-Type', 'application/json')
-                return (rsp_json, 403)
+            isUnique = isValueUnique(content["title"])
+            if not isUnique:
+                return(makeResponse(msg_uniq), 403)
 
             # Create new Project
+            con = dbconnect()
+            cursor = con.cursor()
             query = ("INSERT INTO projects (type, title, description) VALUES ('"
                     + content["type"] + "', '"
                     + content["title"] + "', '" 
                     + content["description"] + "');")
+
             cursor.execute(query)
             con.commit()
             new_id = cursor.lastrowid
 
-            # Write success response
-            msg_pass = json.dumps([{
-                "pid": new_id, 
-                "type": content["type"], 
-                "title": content["title"], 
-                "description": content["description"], 
-                "self": request.url + "/" + str(new_id)}],
-                indent=4, separators=(',', ':'))
+            if image:
+                img_query = ("INSERT INTO images (project, file_name, file_type, file_path) VALUES ("
+                            + str(new_id) + ", '"
+                            + content["image"]["file_name"] + "', '"
+                            + content["image"]["file_type"] + "', '"
+                            + content["image"]["file_path"] + "');")
 
-            rsp_json = make_response(msg_pass)
-            rsp_json.headers.set('Content-Type', 'application/json')
+                cursor.execute(img_query)
+                con.commit()
+                new_img_id = cursor.lastrowid
+
+                # Write success response
+                msg_pass = json.dumps([{
+                    "pid": new_id, 
+                    "type": content["type"], 
+                    "title": content["title"], 
+                    "description": content["description"],
+                    "image": {
+                        "iid": new_img_id,
+                        "project": new_id,
+                        "file_name": content["image"]["file_name"],
+                        "file_type": content["image"]["file_type"],
+                        "file_path": content["image"]["file_path"],
+                        "self": request.host_url + "images/" + str(new_img_id)
+                    },
+                    "self": request.url + "/" + str(new_id)}],
+                    indent=4, separators=(',', ':'))
+            else:
+                msg_pass = json.dumps([{
+                    "pid": new_id, 
+                    "type": content["type"], 
+                    "title": content["title"], 
+                    "description": content["description"],
+                    "image": None,
+                    "self": request.url + "/" + str(new_id)}],
+                    indent=4, separators=(',', ':'))
+                
             cursor.close()
             disconnect(con)
-            return (rsp_json, 201)
+            return(makeResponse(msg_pass), 201)
 
         except:
-            if cursor:
-                cursor.close()
-            if con:
-                disconnect(con)
-            rsp_json = make_response(msg_fail)
-            rsp_json.headers.set('Content-Type', 'application/json')
-            return (rsp_json, 500)
+            try: 
+                if cursor:
+                    cursor.close()
+                if con:
+                    disconnect(con)
+            except:
+                pass
+            return(makeResponse(msg_fail), 500)
     
 ## -------------------------------------------##
 ## View a Project
 ## -------------------------------------------##
-@projects_api.route('/projects/<pid>', methods=['GET'])
+@projects_api.route('/api/projects/<pid>', methods=['GET'])
 def viewProject(pid):
     
-    ## Check for valid accept-type
     if 'application/json' in request.accept_mimetypes:
 
         try:
             # Open connection and query database for project
             con = dbconnect()
-            # query = ("SELECT p.pid, p.type, p.title, i.iid, i.file_name, i.file_type, i.file_path "
-            #         "from projects p inner join images i ON i.project = p.pid "
-            #         "WHERE p.pid = " + pid + ";")
-
-            query= ("SELECT pid, type, title, description from projects WHERE pid = " + pid + ";")
+            query = ("SELECT p.pid, p.type, p.title, p.description, i.iid, i.project, i.file_name, i.file_type, i.file_path "
+                    "from projects p inner join images i ON i.project = p.pid "
+                    "WHERE p.pid = " + pid + ";")
             cursor = con.cursor()
             cursor.execute(query)
             row_headers=[x[0] for x in cursor.description]
@@ -136,49 +163,61 @@ def viewProject(pid):
 
             project_list = []
 
-            ## Check for a project with this id
             if len(results) > 0:
                 for row in results:
                     url = (request.url,)
                     new_tup = row + url
-                    print(type(new_tup))
                     project_list.append(dict(zip(row_headers, new_tup)))
 
                 cursor.close()
                 disconnect(con)
+                if project_list[0]["iid"]:
+                    msg_pass = json.dumps([{
+                            "pid": project_list[0]["pid"], 
+                            "type": project_list[0]["type"], 
+                            "title": project_list[0]["title"], 
+                            "description": project_list[0]["description"],
+                            "image": {
+                                "iid": project_list[0]["iid"],
+                                "project": project_list[0]["project"],
+                                "file_name": project_list[0]["file_name"],
+                                "file_type": project_list[0]["file_type"],
+                                "file_path": project_list[0]["file_path"],
+                                "self": request.host_url + "images/" + str(project_list[0]["iid"])
+                            },
+                            "self": request.url}],
+                            indent=4, separators=(',', ':'))
+                    return(makeResponse(msg_pass), 200)
+                else:
 
-                ## Write success message
-                msg_pass = json.dumps(
-                    project_list,
-                    indent=4, separators=(',', ':'))
-                rsp_json = make_response(msg_pass)
-                rsp_json.headers.set('Content-Type', 'application/json')
-                return (rsp_json, 200)
+                    ## Write success message
+                    msg_pass = json.dumps(
+                        project_list,
+                        indent=4, separators=(',', ':'))
+                    return(makeResponse(msg_pass), 200)
+
             ## No project with that id is found
             else:
                 cursor.close()
                 disconnect(con)
-                rsp_json = make_response(msg_none)
-                rsp_json.headers.set('Content-Type', 'application/json')
-                return (rsp_json, 404)
+                return(makeResponse(msg_none), 404)
 
         except:
-            if cursor:
-                cursor.close()
-            if con:
-                disconnect(con)
-            rsp_json = make_response(msg_fail)
-            rsp_json.headers.set('Content-Type', 'application/json')
-            return (rsp_json, 500)
+            try: 
+                if cursor:
+                    cursor.close()
+                if con:
+                    disconnect(con)
+            except:
+                pass
+            return(makeResponse(msg_fail), 500)
     else:
-        rsp_json = make_response(msg_accept_type)
-        rsp_json.headers.set('Content-Type', 'application/json')
-        return (rsp_json, 406)
+        return(makeResponse(msg_accept_type), 406)
 
 ## -------------------------------------------##
 ## View all Project
 ## -------------------------------------------##
-@projects_api.route('/projects', methods=['GET'])
+@projects_api.route('/api/projects', methods=['GET'])
 def viewAllProjects():
 
     # Check for valid accept-type
@@ -187,12 +226,11 @@ def viewAllProjects():
         try:
             # Open DB connection and query for projects
             con = dbconnect()
-            # query = ("SELECT p.pid, p.type, p.title, i.iid, i.file_name, i.file_type, i.file_path "
-            #         "from projects p left join images i ON i.project = p.pid;")
-            query= ("SELECT pid, type, title, description from projects;")
+            query = ("SELECT pid, type, title, description from projects;")
             cursor = con.cursor()
             cursor.execute(query)
             row_headers=[x[0] for x in cursor.description]
+            row_headers.append('images')
             row_headers.append('self')
             results = cursor.fetchall()
 
@@ -201,184 +239,203 @@ def viewAllProjects():
             # Write results to JSON object
             if len(results) > 0:
                 for row in results:
-                    url = (request.url + "/" + str(row[0]),)
-                    new_tup = row + url
-                    print(type(new_tup))
-                    project_list.append(dict(zip(row_headers, new_tup)))
+                    img_query = ("SELECT iid, project, file_name, file_type, file_path from images WHERE project = " + str(row[0]))
 
-            msg_json = make_response(json.dumps(
-                project_list, 
-                indent=2,
-                separators=(',', ':')))
-            msg_json.headers.set('Content-Type', 'application/json')
+                    cursor.execute(img_query)
+                    img_results = cursor.fetchall()
+
+                    img_list = []
+                    if len(img_results) > 0:
+                        for i in img_results:
+                            img_list.append({"iid": i[0],
+                                            "project": i[1],
+                                            "file_name": i[2],
+                                            "file_type": i[3],
+                                            "file_path": i[4],
+                                            "self": request.host + "/api/images/" + str(i[0])
+                                            })
+                    imgs = (img_list,)
+                    img_tup = row + imgs
+                    url = (request.url + "/" + str(row[0]),)
+                    url_tup = img_tup + url
+                    project_list.append(dict(zip(row_headers, url_tup)))
 
             cursor.close()
             disconnect(con)
-            return (msg_json, 200)
+            return(makeResponse(json.dumps(
+                project_list, 
+                indent=2,
+                separators=(',', ':'))), 200)
 
         except:
-            if cursor:
-                cursor.close()
-            if con:
-                disconnect(con)
-            rsp_json = make_response(msg_fail)
-            rsp_json.headers.set('Content-Type', 'application/json')
-            return (rsp_json, 500)
+            try: 
+                if cursor:
+                    cursor.close()
+                if con:
+                    disconnect(con)
+            except:
+                pass
+            return(makeResponse(msg_fail), 500)
     else:
-        rsp_json = make_response(msg_accept_type)
-        rsp_json.headers.set('Content-Type', 'application/json')
-        return (rsp_json, 406)
+        return(makeResponse(msg_accept_type), 406)
 
     
 
 ## -------------------------------------------##
 ## Edit a Project
 ## -------------------------------------------##
-@projects_api.route('/projects/<pid>', methods=['PATCH'])
+@projects_api.route('/api/projects/<pid>', methods=['PATCH'])
 def patchProject(pid):
 
-    # Check for valid content-type
     if request.content_type != "application/json":
-        rsp_json = make_response(msg_content_type)
-        rsp_json.headers.set('Content-Type', 'application/json')
-        return (rsp_json, 406)
-    # Check for valid accept-type
+        return(makeResponse(msg_content_type), 406)
     elif 'application/json' not in request.accept_mimetypes:
-        rsp_json = make_response(msg_accept_type)
-        rsp_json.headers.set('Content-Type', 'application/json')
-        return (rsp_json, 406)
+        return(makeResponse(msg_accept_type), 406)
     else:
         try:
             # Get request values
             content = request.get_json()
 
-            ## Open Connection
-            con = dbconnect()
-            cursor = con.cursor()
+            valid = doesPidExist(pid)
+            if not valid:
+                return(makeResponse(msg_none), 404)
 
-            ## Check if the pid exists
-            precheck = ("SELECT pid from projects WHERE pid = '" + pid + "';")
-            cursor.execute(precheck)
-            results = cursor.fetchall()
-
-            ## If no result, not a valid ID
-            if len(results) <= 0:
-                cursor.close()
-                disconnect(con)
-                rsp_json = make_response(msg_none)
-                rsp_json.headers.set('Content-Type', 'application/json')
-                return (rsp_json, 404)
+            # Check for Uniqueness of Title
+            try:
+                isUnique = isValueUnique(content["title"])
+                if not isUnique:
+                    return(makeResponse(msg_uniq), 403)
+            except:
+                pass
 
             ## Build UPDATE String
-            query = "UPDATE projects SET "
+            update = createUpdateQuery(content, pid)
+            
+            if update[0]:
+                con = dbconnect()
+                cursor = con.cursor()
+                cursor.execute(update[1])
+                con.commit()
+                cursor.close()
+                disconnect(con) 
 
-            first = True
-            for i in content:
-                
-                if not first:
-                    query += ", "
-                else:
-                    first = False
+            ## Check for image Update
+            try:
+                imageContent = False
+                for i in content:
+                    if i == "image":
+                        imageContent = True
 
-                if i == "title":
-                    uniq = ("SELECT title from projects "
-                    " WHERE title = '" + content["title"] + "';")
-                    cursor.execute(uniq)
-                    results = cursor.fetchall()
-
-                    if len(results) > 0:
-                        cursor.close()
-                        disconnect(con)
-                        rsp_json = make_response(msg_uniq)
-                        rsp_json.headers.set('Content-Type', 'application/json')
-                        return (rsp_json, 403)
+                if imageContent:
+                    imageExists = hasImage(pid)
+                    # If there is already an image
+                    if imageExists:
+                        img_update = createImageUpdateQuery(content["image"], pid)
+                    # Otherwise create new image
                     else:
-                        query += "title = '" + content["title"] + "'"
+                        if not validateImage(content["image"]):
+                            return(makeResponse(msg_miss), 400)
+                        else:
+                            img_update = (True,
+                            ("INSERT INTO images (project, file_name, file_type, file_path) VALUES ("
+                                + str(pid) + ", '"
+                                + content["image"]["file_name"] + "', '"
+                                + content["image"]["file_type"] + "', '"
+                                + content["image"]["file_path"] + "');"))
 
-                elif i == "type":
-                    query += "type = '" + content["type"] + "'"
-                elif i == "description":
-                    query += "description = '" + content["description"] + "'"
-
-            query += " WHERE pid = " + pid + ";"
-            cursor.execute(query)
-            con.commit()
+                    if img_update[0]:
+                        con = dbconnect()
+                        cursor = con.cursor()
+                        cursor.execute(img_update[1])
+                        con.commit()
+                        cursor.close()
+                        disconnect(con) 
+                      
+            except:
+                pass
 
             ## Retrieve the updated object
-            check = ("select pid, type, title, description "
+            new_query = ("select pid, type, title, description "
                     "from projects where pid = " + pid + ";")
-
-            cursor.execute(check)
+            con = dbconnect()
+            cursor = con.cursor()
+            cursor.execute(new_query)
             row_headers=[x[0] for x in cursor.description]
+            row_headers.append('image')
             row_headers.append('self')
             results = cursor.fetchall()
 
             project_list = []
-
+            # Write results to JSON object
             if len(results) > 0:
                 for row in results:
+                    img_query = ("SELECT iid, project, file_name, file_type, file_path from images WHERE project = " + str(row[0]))
+
+                    cursor.execute(img_query)
+                    img_results = cursor.fetchall()
+
+                    img_list = []
+                    if len(img_results) > 0:
+                        for i in img_results:
+                            img_list.append({"iid": i[0],
+                                            "project": i[1],
+                                            "file_name": i[2],
+                                            "file_type": i[3],
+                                            "file_path": i[4],
+                                            "self": request.host + "/api/images/" + str(i[0])
+                                            })
+                    imgs = (img_list,)
+                    img_tup = row + imgs
                     url = (request.url,)
-                    new_tup = row + url
-                    project_list.append(dict(zip(row_headers, new_tup)))
+                    url_tup = img_tup + url
+                    project_list.append(dict(zip(row_headers, url_tup)))
 
             ## Return the new object JSON
-            rsp_json = make_response(json.dumps(
+            cursor.close()
+            disconnect(con)
+            return(makeResponse(json.dumps(
                 project_list, 
                 indent=2,
                 separators=(',', ':'),
-                default=str))
-            rsp_json.headers.set('Content-Type', 'application/json')
-
-            cursor.close()
-            disconnect(con)
-            return (rsp_json, 201)
+                default=str)), 201)
 
         except:
-            if cursor:
-                cursor.close()
-            if con:
-                disconnect(con)
-            rsp_json = make_response(msg_fail)
-            rsp_json.headers.set('Content-Type', 'application/json')
-            return (rsp_json, 500)
+            try: 
+                if cursor:
+                    cursor.close()
+                if con:
+                    disconnect(con)
+            except:
+                pass
+            return(makeResponse(msg_fail), 500)
  
 ## -------------------------------------------##
 ## Delete a Project
 ## -------------------------------------------##
-@projects_api.route('/projects/<pid>', methods=['DELETE'])
+@projects_api.route('/api/projects/<pid>', methods=['DELETE'])
 def deleteProject(pid):
     try:
-        # Open DB connection and see if pid exissts
-        con = dbconnect()
-        cursor = con.cursor()
-        query = ("SELECT pid from projects WHERE pid = '" + pid + "';")
-        cursor.execute(query)
-        results = cursor.fetchall()
-
-        # If no results, then no pid exists
-        if len(results) <= 0:
-            con.commit()
-            cursor.close()
-            rsp_json = make_response(msg_none)
-            rsp_json.headers.set('Content-Type', 'application/json')
-            return (rsp_json, 404)
+        
+        # Check if Pid exists
+        if not doesPidExist(pid):
+            return(makeResponse(msg_none), 404)
         else:
             # Delete Project
             query = ("DELETE from projects WHERE pid = " + pid + ";")
+            con = dbconnect()
+            cursor = con.cursor()
             cursor.execute(query)
             con.commit()
             cursor.close()
             disconnect(con)
-            rsp_json = make_response('')
-            rsp_json.headers.set('Content-Type', 'application/json')
-            return (rsp_json, 204)
+            return(makeResponse(''), 204)
 
     except:
-
-        if cursor:
-            cursor.close()
-        if con:
-            disconnect(con)
-        rsp_json = make_response(msg_fail)
-        rsp_json.headers.set('Content-Type', 'application/json')
-        return (rsp_json, 500)
+        try: 
+            if cursor:
+                cursor.close()
+            if con:
+                disconnect(con)
+        except:
+            pass
+        return(makeResponse(msg_fail), 500)
