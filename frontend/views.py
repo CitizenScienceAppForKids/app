@@ -9,6 +9,14 @@ from flask import (
 
 mod = Blueprint('site', __name__, template_folder='templates', static_folder='static', static_url_path='/webapp/static')
 
+@mod.route('/sw.js', methods=['GET'])
+def sw():
+    return mod.send_static_file('sw.js')
+
+@mod.route('/test_image_upload', methods=['GET', 'POST'])
+def image_upload():
+    return render_template('public/test_image_upload.html')
+
 @mod.route('/')
 def homepage():
     return render_template('public/home.html')

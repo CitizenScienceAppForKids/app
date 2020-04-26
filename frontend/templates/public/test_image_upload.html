@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron">
+    <div class="container">
+
+      <h1 class="display-3">Citizen Science</h1>
+
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <p><a href="/about" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+    </div>
+</div><!-- /.jumbotron -->
+
+<div class="posts-container">
+  <div class="row">
+    <div class="col-lg-4">
+        <div class="post-text-container">
+          <h2><i class="fa fa-code"></i>Project 1</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p><a class="btn btn-outline-secondary" href="/projects/specific-project">Learn More &raquo;</a></p>
+        </div>
+        <div class="post-img-container">
+        </div>
+    </div>
+  </div><!-- /.row -->
+</div>
+
+<form method="post" id="imageSubmitForm">
+  <label for="img">Select image:</label>
+  <input type="file" id="img" name="img" accept="image/*">
+  <input type="submit" id="img_submit">
+</form>
+
+<script>
+	// register sync with service worker
+	navigator.serviceWorker.ready.then(function(swRegistration) {
+		document.getElementById('img_submit').addEventListener('click', () => {
+			return swRegistration.sync.register('myFirstSync');
+		});
+	});
+</script>
+
+
+<script>
+	window.addEventListener("DOMContentLoaded", function() {
+		document.querySelector('#imageSubmitForm').addEventListener('submit', submitImage);
+	});
+</script>
+
+<script>
+	let db;
+
+	window.addEventListener("load", function() {
+		let request = window.indexedDB.open('image_db', 1);
+	
+		request.onerror = function() {
+			console.log('Database failed to open');
+		};
+
+		request.onsuccess = function() {
+			console.log('Database opened successfully');
+			db = request.result;
+			// TODO displayData();
+		};
+
+		request.onupgradeneeded = function(e) {
+			let db = e.target.result;
+
+			let objectStore = db.createObjectStore('images_os', { keyPath: 'id', autoIncrement:true });
+
+			objectStore.createIndex('img_string', 'img_string', { unique: false });
+
+			console.log('Database setup complete');
+		};
+	});
+</script>
+
+<script>
+	function submitImage(e) {
+		e.preventDefault();
+
+		console.log("Submitting");
+
+		var reader = new FileReader();
+		reader.readAsBinaryString(e.target.elements[0].files[0]);	
+
+		reader.addEventListener("load", (e) => {
+			binary_img = e.target.result	
+			console.log(`${binary_img}`)
+			// grab the values entered into the form fields and store them in an object ready for being inserted into the DB
+			let newItem = { 
+				img_string: binary_img
+			};
+
+			// open a read/write db transaction, ready for adding the data
+			let transaction = db.transaction(['images_os'], 'readwrite');
+
+			// call an object store that's already been added to the database
+			let objectStore = transaction.objectStore('images_os');
+
+			// Make a request to add our newItem object to the object store
+			let request = objectStore.add(newItem);
+			request.onsuccess = function() {
+				// Clear the form, ready for adding the next entry
+				img.value = '';
+			};
+
+			// Report on the success of the transaction completing, when everything is done
+			transaction.oncomplete = function() {
+				console.log('Transaction completed: database modification finished.');
+
+				// update the display of data to show the newly added item, by running displayData() again.
+				// TODO displayData();
+			};
+
+			transaction.onerror = function() {
+				console.log('Transaction not opened due to error');
+			};
+		});
+	}
+</script>
+
+{% endblock %}
