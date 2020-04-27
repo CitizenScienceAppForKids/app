@@ -9,7 +9,7 @@ var urlsToCache = [
 	'/observations',
 	'/projects',
 	'/projects/specific-project',
-	'/projects/visualiation'
+	'/projects/visualization'
 ];
 
 self.addEventListener('install', function(event) {
@@ -30,9 +30,33 @@ self.addEventListener('sync', function(event) {
 });
 
 function uploadImage() {
+	let db;
 	// pull post request from indexedDB
-	// store the image on the server
-	// make post request to store the image in the images table
-	// clear the entry from indexed DB
-};
+	request = indexedDB.open("image_db");
+	request.addEventListener('success', (e) => {
+		db = e.target.result;
+		db.transaction('images_os').objectStore('images_os').get(1).addEventListener('success', (e) => {
+			fetch('/decode', {
+				method: 'post',
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: {
+					"base64_string": "event.target.result.img_string"
+				}
+			})
+			.then(() => {
+					console.log("Something went okay");
+			})
+			.catch(() => {
+				console.log("Somthing is borked");
+			});
+		});
+	});
 
+	request.addEventListener('error', (e) => {
+		console.log("Couldn't open database in service worker!");
+	});
+
+	// clear the entry from indexed DB
+}

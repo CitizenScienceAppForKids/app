@@ -17,6 +17,10 @@ def sw():
 def image_upload():
     return render_template('public/test_image_upload.html')
 
+@mod.route('/decode', methods=['GET', 'POST'])
+def decode():
+    print('Decode!', file=sys.stderr) 
+
 @mod.route('/')
 def homepage():
     return render_template('public/home.html')

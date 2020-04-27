@@ -51,7 +51,7 @@
 	let db;
 
 	window.addEventListener("load", function() {
-		let request = window.indexedDB.open('image_db', 1);
+		let request = window.indexedDB.open('image_db', 3);
 	
 		request.onerror = function() {
 			console.log('Database failed to open');
@@ -82,11 +82,10 @@
 		console.log("Submitting");
 
 		var reader = new FileReader();
-		reader.readAsBinaryString(e.target.elements[0].files[0]);	
+		reader.readAsDataURL(e.target.elements[0].files[0]);	
 
 		reader.addEventListener("load", (e) => {
 			binary_img = e.target.result	
-			console.log(`${binary_img}`)
 			// grab the values entered into the form fields and store them in an object ready for being inserted into the DB
 			let newItem = { 
 				img_string: binary_img
