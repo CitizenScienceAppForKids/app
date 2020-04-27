@@ -85,10 +85,14 @@
 		reader.readAsDataURL(e.target.elements[0].files[0]);	
 
 		reader.addEventListener("load", (e) => {
-			binary_img = e.target.result	
+			// FileRead appends the type to the front of the base64 string - this causes issues with decoding
+			// on the server, so we separate them here
+			base64ImgType   = e.target.result.split(',')[0];
+			base64ImgString = e.target.result.split(',')[1];
+
 			// grab the values entered into the form fields and store them in an object ready for being inserted into the DB
 			let newItem = { 
-				img_string: binary_img
+				img_string: base64ImgString
 			};
 
 			// open a read/write db transaction, ready for adding the data

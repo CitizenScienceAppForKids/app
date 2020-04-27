@@ -35,15 +35,14 @@ function uploadImage() {
 	request = indexedDB.open("image_db");
 	request.addEventListener('success', (e) => {
 		db = e.target.result;
-		db.transaction('images_os').objectStore('images_os').get(1).addEventListener('success', (e) => {
+		db.transaction('images_os').objectStore('images_os').get(47).addEventListener('success', (e) => {
+			const requestBody = { "base64_string": e.target.result.img_string };
 			fetch('/decode', {
 				method: 'post',
 				headers: {
 					"Content-Type": "application/json"
 				},
-				body: {
-					"base64_string": "event.target.result.img_string"
-				}
+				body: JSON.stringify(requestBody)
 			})
 			.then(() => {
 					console.log("Something went okay");
