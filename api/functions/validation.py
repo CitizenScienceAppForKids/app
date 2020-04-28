@@ -47,6 +47,7 @@ def validateProjectDescription(d):
 
 
 
+
 # Check that the observation conforms to format
 def validateAllObservationData(c):
     return validateObservationDate(c["date"]) and validateObservationTitle(c["title"]) and validateObservationNotes(c["notes"])
@@ -84,4 +85,35 @@ def validateObservationNotes(n):
     if not all(x.isalnum() or x.isspace() for x in n):
         return False
 
+    return True
+
+def validateImage(c):
+    try:
+        if c["file_name"] == "":
+            return False
+        
+        if c["file_type"] != "png" and c["file_type"] != "jpg":
+            return False
+        
+        if c["file_path"] == "":
+            return False
+    except:
+        return False
+    
+    return True
+
+def validateImages(c):
+    try:
+        for i in c:
+            if i["file_name"] == "":
+                return False
+            
+            if i["file_type"] != "png" and c["file_type"] != "jpg":
+                return False
+            
+            if i["file_path"] == "":
+                return False
+    except:
+        return False
+    
     return True
