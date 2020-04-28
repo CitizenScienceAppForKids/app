@@ -1,9 +1,9 @@
 from flask import Flask, Blueprint, request, make_response
 from json2html import *
 import json
-from functions.utilities import *
-from functions.validation import *
-from functions.helpers import *
+from api.functions.utilities import *
+from api.functions.validation import *
+from api.functions.helpers import *
 
 projects_api = Blueprint('projects_api', __name__)
 

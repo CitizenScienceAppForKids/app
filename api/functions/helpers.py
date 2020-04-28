@@ -6,7 +6,7 @@ import os
 from datetime import datetime
 import mysql.connector
 from mysql.connector import errorcode
-from functions.utilities import *
+from api.functions.utilities import *
 
 
 def makeResponse(message):

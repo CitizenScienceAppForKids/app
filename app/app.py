@@ -3,8 +3,8 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from api.ProjectsAPI import projects_api
 from api.ObservationsAPI import observations_api
-from ImagesAPI import images_api
-from api.functions.dbconnection import *
+from api.ImagesAPI import images_api
+#from api.functions.utilities import *
 from json2html import *
 import json
 from frontend.views import mod
