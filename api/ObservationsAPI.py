@@ -2,15 +2,9 @@ from flask import Flask, Blueprint, request, make_response
 from json2html import *
 import json
 import datetime
-<<<<<<< Updated upstream
-from api.functions.dbconnection import *
-from api.functions.validation import *
-
-=======
 from functions.utilities import *
 from functions.validation import *
 from functions.helpers import *
->>>>>>> Stashed changes
 
 observations_api = Blueprint('observations_api', __name__)
 
