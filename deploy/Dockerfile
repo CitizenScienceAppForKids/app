@@ -17,8 +17,6 @@ RUN apk add --update --no-cache \
 		nginx \
 		supervisor \
 		nodejs npm \
-		iptables \
-		ip6tables
 
 RUN pip3 install -r deploy/requirements.txt
 
