@@ -16,7 +16,9 @@ RUN apk add --update --no-cache \
 		python3-dev \
 		nginx \
 		supervisor \
-		nodejs npm
+		nodejs npm \
+		iptables \
+		ip6tables
 
 RUN pip3 install -r deploy/requirements.txt
 
@@ -26,11 +28,10 @@ RUN addgroup -S nginx_runner && adduser -S --no-create-home nginx_runner -G ngin
 # Copy server config files to appropriate locations in container
 COPY deploy/nginx.conf /etc/nginx/
 COPY deploy/proxy_params /etc/nginx/
-COPY deploy/uwsgi.ini /etc/uwsgi/
 COPY deploy/supervisord.conf /etc/
 
 # Create logfile directories if they don't exist
 RUN mkdir -p /run/pid/ /var/log/supervisor/
-RUN cd /app/client && npm install 
+RUN cd /app/client && npm install && cd /app
 
 CMD [ "/usr/bin/supervisord","--configuration=/etc/supervisord.conf" ]
