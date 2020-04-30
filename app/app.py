@@ -1,4 +1,5 @@
 from flask import Flask, request, make_response, Blueprint
+from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from api.ProjectsAPI import projects_api
@@ -23,6 +24,7 @@ from frontend.views import mod
 
 def create_app():
     app = Flask(__name__, template_folder='template')
+    cors = CORS(app)
     app.register_blueprint(projects_api)
     app.register_blueprint(observations_api)
     app.register_blueprint(mod)
