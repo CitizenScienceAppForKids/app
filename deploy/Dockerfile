@@ -16,7 +16,7 @@ RUN apk add --update --no-cache \
 		python3-dev \
 		nginx \
 		supervisor \
-		nodejs npm \
+		nodejs npm
 
 RUN pip3 install -r deploy/requirements.txt
 
