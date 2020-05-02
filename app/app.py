@@ -27,6 +27,7 @@ def create_app():
     cors = CORS(app)
     app.register_blueprint(projects_api)
     app.register_blueprint(observations_api)
+    app.register_blueprint(images_api)
     app.register_blueprint(mod)
     return app
 
@@ -35,7 +36,7 @@ app = create_app()
 limiter = Limiter(
     app,
     key_func=get_remote_address,
-    default_limits=["100 per day"],
+    default_limits=["1000 per hour"],
 )
 
 

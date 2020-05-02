@@ -293,7 +293,7 @@ def viewObservation(oid):
                                             "file_name": i[2],
                                             "file_type": i[3],
                                             "file_path": i[4],
-                                            "self": request.host + "/api/images/" + str(i[0])
+                                            "self": request.host_url + "api/images/" + str(i[0])
                                             })
 
                     imgs = (img_list,)
@@ -365,7 +365,7 @@ def viewAllObservations():
                                             "file_name": i[2],
                                             "file_type": i[3],
                                             "file_path": i[4],
-                                            "self": request.host + "/api/images/" + str(i[0])
+                                            "self": request.host_url + "api/images/" + str(i[0])
                                             })
 
                     imgs = (img_list,)
@@ -435,7 +435,7 @@ def viewAllProjectObservations(pid):
                                             "file_name": i[2],
                                             "file_type": i[3],
                                             "file_path": i[4],
-                                            "self": request.host + "/api/images/" + str(i[0])
+                                            "self": request.host_url + "api/images/" + str(i[0])
                                             })
 
                     imgs = (img_list,)
@@ -753,3 +753,131 @@ def unassignObservation(pid, oid):
     else:
         return(makeResponse(msg_accept_type), 406)
 
+## --------------------------------------------------------------------##
+## Linking Operations Between Observations and Images
+## --------------------------------------------------------------------##
+
+## -------------------------------------------##
+## Assign Image to Observation
+## -------------------------------------------##
+@observations_api.route('/api/observations/<oid>/images/<iid>', methods=['PUT'])
+def assignImageToObservation(oid, iid):
+
+    if 'application/json' in request.accept_mimetypes:
+        try:
+            ## Check for valid IDs
+
+            iidValid = doesIidExist(iid)
+            if not iidValid:
+                return(makeResponse(msg_none), 404)
+
+            oidValid = doesOidExist(oid)
+            if not oidValid:
+                return(makeResponse(msg_none), 404)
+
+            query = ("UPDATE images SET observation = " + oid +
+                    " WHERE iid = " + iid + ";")
+            
+            con = dbconnect()
+            cursor = con.cursor()
+            cursor.execute(query)
+            con.commit()
+
+            get_query = ("select iid, project, observation, file_name, file_type, file_path "
+                        "from images where iid = " + iid + ";")
+            cursor.execute(get_query)
+            row_headers=[x[0] for x in cursor.description]
+            row_headers.append('self')
+            results = cursor.fetchall()
+            cursor.close()
+            disconnect(con)
+
+            item_list = []
+            for row in results:
+                url = (request.host_url + "api/images/" + str(row[0]),)
+                new_tup = row + url
+                item_list.append(dict(zip(row_headers, new_tup)))
+
+            msg_pass = json.dumps(
+                item_list,
+                indent=4,
+                separators=(',', ':'),
+                default=str
+            )
+            return(makeResponse(msg_pass), 201)
+
+        except:
+            try: 
+                if cursor:
+                    cursor.close()
+                if con:
+                    disconnect(con)
+            except:
+                pass
+            
+            return(makeResponse(msg_fail), 500)
+
+    else:
+
+        return(makeResponse(msg_accept_type), 406)
+
+    
+
+## -------------------------------------------##
+## Unassign Observation from Project
+## -------------------------------------------##
+@observations_api.route('/api/observations/<oid>/images/<iid>', methods=['DELETE'])
+def unassignImageFromObservation(oid, iid):
+    
+    if 'application/json' in request.accept_mimetypes:
+        try:
+
+            iidValid = doesIidExist(iid)
+            if not iidValid:
+                return(makeResponse(msg_none), 404)
+
+            oidValid = doesOidExist(oid)
+            if not oidValid:
+                return(makeResponse(msg_none), 404)
+
+            query = ("UPDATE images SET observation = Null WHERE iid = " + iid + ";")
+
+            con = dbconnect()
+            cursor = con.cursor()
+            cursor.execute(query)
+            con.commit()
+
+            get_query = ("select iid, project, observation, file_name, file_type, file_path "
+                        "from images where iid = " + iid + ";")
+            cursor.execute(get_query)
+            row_headers=[x[0] for x in cursor.description]
+            row_headers.append('self')
+            results = cursor.fetchall()
+            cursor.close()
+            disconnect(con)
+
+            item_list = []
+            for row in results:
+                url = (request.host_url + "api/images/" + str(row[0]),)
+                new_tup = row + url
+                item_list.append(dict(zip(row_headers, new_tup)))
+
+            msg_pass = json.dumps(
+                item_list,
+                indent=4,
+                separators=(',', ':'),
+                default=str
+            )
+            return(makeResponse(msg_pass), 201)
+        except:
+            try: 
+                if cursor:
+                    cursor.close()
+                if con:
+                    disconnect(con)
+            except:
+                pass
+            
+            return(makeResponse(msg_fail), 500)
+    else:
+        return(makeResponse(msg_accept_type), 406)

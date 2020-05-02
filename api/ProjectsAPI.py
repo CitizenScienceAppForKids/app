@@ -338,6 +338,9 @@ def patchProject(pid):
                                 + content["image"]["file_type"] + "', '"
                                 + content["image"]["file_path"] + "');"))
 
+                    print("-------------")
+                    print(img_update)
+                    print("-------------")
                     if img_update[0]:
                         con = dbconnect()
                         cursor = con.cursor()
@@ -434,3 +437,132 @@ def deleteProject(pid):
         except:
             pass
         return(makeResponse(msg_fail), 500)
+
+
+## --------------------------------------------------------------------##
+## Linking Operations Projects and Images
+## --------------------------------------------------------------------##
+
+## -------------------------------------------##
+## Assign Image to Project
+## -------------------------------------------##
+@projects_api.route('/api/projects/<pid>/images/<iid>', methods=['PUT'])
+def assignImageToProject(pid, iid):
+
+    if 'application/json' in request.accept_mimetypes:
+        try:
+            ## Check for valid IDs
+            iidValid = doesIidExist(iid)
+            if not iidValid:
+                return(makeResponse(msg_none), 404)
+
+            pidValid = doesPidExist(pid)
+            if not pidValid:
+                return(makeResponse(msg_none), 404)
+
+            query = ("UPDATE images SET project = " + pid +
+                    " WHERE iid = " + iid + ";")
+            
+            con = dbconnect()
+            cursor = con.cursor()
+            cursor.execute(query)
+            con.commit()
+
+            get_query = ("select iid, project, observation, file_name, file_type, file_path "
+                        "from images where iid = " + iid + ";")
+            cursor.execute(get_query)
+            row_headers=[x[0] for x in cursor.description]
+            row_headers.append('self')
+            results = cursor.fetchall()
+            cursor.close()
+            disconnect(con)
+
+            item_list = []
+            for row in results:
+                url = (request.host_url + "api/images/" + str(row[0]),)
+                new_tup = row + url
+                item_list.append(dict(zip(row_headers, new_tup)))
+
+            msg_pass = json.dumps(
+                item_list,
+                indent=4,
+                separators=(',', ':'),
+                default=str
+            )
+            return(makeResponse(msg_pass), 201)
+
+        except:
+            try: 
+                if cursor:
+                    cursor.close()
+                if con:
+                    disconnect(con)
+            except:
+                pass
+            
+            return(makeResponse(msg_fail), 500)
+
+    else:
+
+        return(makeResponse(msg_accept_type), 406)
+
+    
+
+## -------------------------------------------##
+## Unassign Observation from Project
+## -------------------------------------------##
+@projects_api.route('/api/projects/<pid>/images/<iid>', methods=['DELETE'])
+def unassignImageFromProject(pid, iid):
+    
+    if 'application/json' in request.accept_mimetypes:
+        try:
+
+            iidValid = doesIidExist(iid)
+            if not iidValid:
+                return(makeResponse(msg_none), 404)
+
+            pidValid = doesPidExist(pid)
+            if not pidValid:
+                return(makeResponse(msg_none), 404)
+
+            query = ("UPDATE images SET project = Null WHERE iid = " + iid + ";")
+
+            con = dbconnect()
+            cursor = con.cursor()
+            cursor.execute(query)
+            con.commit()
+
+            get_query = ("select iid, project, observation, file_name, file_type, file_path "
+                        "from images where iid = " + iid + ";")
+            cursor.execute(get_query)
+            row_headers=[x[0] for x in cursor.description]
+            row_headers.append('self')
+            results = cursor.fetchall()
+            cursor.close()
+            disconnect(con)
+
+            item_list = []
+            for row in results:
+                url = (request.host_url + "api/images/" + str(row[0]),)
+                new_tup = row + url
+                item_list.append(dict(zip(row_headers, new_tup)))
+
+            msg_pass = json.dumps(
+                item_list,
+                indent=4,
+                separators=(',', ':'),
+                default=str
+            )
+            return(makeResponse(msg_pass), 201)
+        except:
+            try: 
+                if cursor:
+                    cursor.close()
+                if con:
+                    disconnect(con)
+            except:
+                pass
+            
+            return(makeResponse(msg_fail), 500)
+    else:
+        return(makeResponse(msg_accept_type), 406)
