@@ -12,10 +12,12 @@ projects_api = Blueprint('projects_api', __name__)
 ## --------------------------------------------------------------------##
 ##
 ## Create a Project                             POST /api/projects
-## View a Project                               GET /projects/<pid>
-## View all Project                             GET /projects
-## Edit a Project                               PATCH /projects/<pid>
-## Delete a Project                             DELETE /projects/<pid>
+## View a Project                               GET /api/projects/<pid>
+## View all Project                             GET /api/projects
+## Edit a Project                               PATCH /api/projects/<pid>
+## Delete a Project                             DELETE /api/projects/<pid>
+## Assign Image to Project                      PUT  /api/projects/<pid>/images/<iid>
+## Unassign Image from Project                  DELETE /api/projects/<pid/images/<iid>
 ##
 ## --------------------------------------------------------------------##
 
@@ -509,7 +511,7 @@ def assignImageToProject(pid, iid):
     
 
 ## -------------------------------------------##
-## Unassign Observation from Project
+## Unassign Image from Project
 ## -------------------------------------------##
 @projects_api.route('/api/projects/<pid>/images/<iid>', methods=['DELETE'])
 def unassignImageFromProject(pid, iid):

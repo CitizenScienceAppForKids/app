@@ -21,6 +21,8 @@ observations_api = Blueprint('observations_api', __name__)
 ## Delete an Observation                        DELETE  /api/observations/<oid>
 ## Assign Observation to Project                PUT /api/projects/<pid>/observations/<oid>
 ## Unassign Observation from Project            DELETE /api/projects/<pid>/observations/<oid>
+## Assign Image to Observation                  PUT  /api/observations/<oid>/images/<iid>
+## Unassign Image from Observation              DELETE  /api/observations/<oid>/images/<iid>
 ##
 ## ----------------------------------------------------------------------------------------##
 
@@ -824,7 +826,7 @@ def assignImageToObservation(oid, iid):
     
 
 ## -------------------------------------------##
-## Unassign Observation from Project
+## Unassign Image from Project
 ## -------------------------------------------##
 @observations_api.route('/api/observations/<oid>/images/<iid>', methods=['DELETE'])
 def unassignImageFromObservation(oid, iid):
