@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
+from flask import Flask, Blueprint, request, make_response
+from json2html import *
+import json
 import os
+from datetime import datetime
 import mysql.connector
 from mysql.connector import errorcode
 
@@ -28,3 +32,10 @@ def disconnect(connection):
         cnx.close()
     except:
         return 0
+
+def makeResponse(message):
+    rsp_json = make_response(message)
+    rsp_json.headers.set('Content-Type', 'application/json')
+    return rsp_json
+
+
