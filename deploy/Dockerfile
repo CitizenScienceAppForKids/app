@@ -7,7 +7,7 @@ WORKDIR /app
 COPY . /app
 
 # Install dependencies
-RUN apk add --no-cache \
+RUN apk add --update --no-cache \
 		linux-headers \
 		bash \
 		g++ \
@@ -15,7 +15,8 @@ RUN apk add --no-cache \
 		py3-pip \
 		python3-dev \
 		nginx \
-		supervisor
+		supervisor \
+		nodejs npm
 
 RUN pip3 install -r deploy/requirements.txt
 
@@ -24,12 +25,11 @@ RUN addgroup -S nginx_runner && adduser -S --no-create-home nginx_runner -G ngin
 
 # Copy server config files to appropriate locations in container
 COPY deploy/nginx.conf /etc/nginx/
-COPY deploy/uwsgi.ini /etc/uwsgi/
+COPY deploy/proxy_params /etc/nginx/
 COPY deploy/supervisord.conf /etc/
 
 # Create logfile directories if they don't exist
 RUN mkdir -p /run/pid/ /var/log/supervisor/
-
-EXPOSE 8080:8080
+RUN cd /app/client && npm install && cd /app
 
 CMD [ "/usr/bin/supervisord","--configuration=/etc/supervisord.conf" ]
