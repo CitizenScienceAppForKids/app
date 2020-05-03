@@ -46,6 +46,27 @@ def createImage():
             # Get request information
             content = request.get_json()
             
+            # Validate project or observation
+            p = None
+            o = None
+
+            for x in content:
+                if x == "project":
+                    pidImage = hasImage(str(content["project"]))
+                    pidValid = doesPidExist(content["project"])
+                    if not pidValid and content["project"] != None:
+                        return(makeResponse(msg_none), 404)
+                    elif pidImage:
+                        return(makeResponse(msg_invl), 400)
+                    else:
+                        p = content["project"]
+                if x == "observation":
+                    oidValid = doesOidExist(content["observation"])
+                    if not oidValid and content["observation"] != None:
+                        return(makeResponse(msg_none), 404)
+                    else:
+                        o = content["observation"]
+            
             # Check for All Required Image Attributes & Validate
             try:
                 if content["file_name"] and content["file_type"] and content["file_path"]:
@@ -55,21 +76,23 @@ def createImage():
             except:
                 return(makeResponse(msg_miss), 400)
 
-
-            # project = None
-            # observation = None
-            # for i in content:
-            #     if i == "project":
-            #         project = content["project"]
-            #     if i == "observation":
-            #         observation = content["observation"]
-
             # Create new Project
             con = dbconnect()
             cursor = con.cursor()
 
-            query = "INSERT INTO images (file_name, file_type, file_path) VALUES (%s, %s, %s)"
-            recordTuple = (content["file_name"], content["file_type"], content["file_path"])
+            if o == None and p == None:
+                query = "INSERT INTO images (file_name, file_type, file_path) VALUES (%s, %s, %s)"
+                recordTuple = (content["file_name"], content["file_type"], content["file_path"])
+            elif o == None and p != None:
+                query = "INSERT INTO images (project, file_name, file_type, file_path) VALUES (%s, %s, %s, %s)"
+                recordTuple = (p, content["file_name"], content["file_type"], content["file_path"])
+            elif o != None and p == None:
+                query = "INSERT INTO images (observation, file_name, file_type, file_path) VALUES (%s, %s, %s, %s)"
+                recordTuple = (o, content["file_name"], content["file_type"], content["file_path"])
+            else:
+                query = "INSERT INTO images (project, observation, file_name, file_type, file_path) VALUES (%s, %s, %s, %s, %s)"
+                recordTuple = (o, p, content["file_name"], content["file_type"], content["file_path"])
+            
             cursor.execute(query, recordTuple)
 
             con.commit()
@@ -78,6 +101,8 @@ def createImage():
             # Write success response
             msg_pass = json.dumps([{
                     "iid": new_id,
+                    "project": p,
+                    "observation": o,
                     "file_name": content["file_name"],
                     "file_type": content["file_type"],
                     "file_path": content["file_path"],

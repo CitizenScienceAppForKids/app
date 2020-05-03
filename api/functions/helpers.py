@@ -34,7 +34,7 @@ def isValueUnique(title):
 def doesPidExist(pid):
     con = dbconnect()
     cursor = con.cursor()
-    query = ("SELECT pid from projects WHERE pid = '" + pid + "';")
+    query = ("SELECT pid from projects WHERE pid = '" + str(pid) + "';")
     cursor.execute(query)
     results = cursor.fetchall()
     cursor.close()
@@ -49,7 +49,7 @@ def doesPidExist(pid):
 def doesOidExist(oid):
     con = dbconnect()
     cursor = con.cursor()
-    query = ("SELECT oid from observations WHERE oid = '" + oid + "';")
+    query = ("SELECT oid from observations WHERE oid = '" + str(oid) + "';")
     cursor.execute(query)
     results = cursor.fetchall()
     cursor.close()
