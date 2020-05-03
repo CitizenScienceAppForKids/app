@@ -30,6 +30,6 @@ COPY deploy/supervisord.conf /etc/
 
 # Create logfile directories if they don't exist
 RUN mkdir -p /run/pid/ /var/log/supervisor/
-RUN cd /app/client && npm install && cd /app
+RUN cd /app/client && npm install && npm run build && cd /app
 
 CMD [ "/usr/bin/supervisord","--configuration=/etc/supervisord.conf" ]
