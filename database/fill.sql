@@ -18,9 +18,9 @@ INSERT INTO `images` (observation, file_name, file_type, file_path) VALUES (7, '
 INSERT INTO `images` (observation, file_name, file_type, file_path) VALUES (8, 'img8', 'png', '/project_images');
 INSERT INTO `images` (observation, file_name, file_type, file_path) VALUES (9, 'img9', 'jpg', '/project_images');
 INSERT INTO `images` (observation, file_name, file_type, file_path) VALUES (1, 'img10', 'png', '/project_images');
-INSERT INTO `images` (project, file_name, file_type, file_path) VALUES (1, 'img11', 'png', '/banners');
-INSERT INTO `images` (project, file_name, file_type, file_path) VALUES (2, 'img12', 'png', '/banners');
-INSERT INTO `images` (project, file_name, file_type, file_path) VALUES (3, 'img13', 'png', '/banners');
+INSERT INTO `images` (project, file_name, file_type, file_path) VALUES (1, 'ecology', '.jpg', '/banners/');
+INSERT INTO `images` (project, file_name, file_type, file_path) VALUES (2, 'biology', '.jpg', '/banners/');
+INSERT INTO `images` (project, file_name, file_type, file_path) VALUES (3, 'Climatology', '.jpg', '/banners/');
 
 UNLOCK TABLES;
 
