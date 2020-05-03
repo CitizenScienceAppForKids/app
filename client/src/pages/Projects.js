@@ -1,26 +1,27 @@
-import React, {Component} from 'react'
+import React, { useEffect, useState } from "react";
 import Pcards from '../components/Pcards'
 
-class Projects extends Component {
-
-    state = {
-        projects:[]
-    }
-
-    componentDidMount() {
-        fetch('http://localhost:5000/api/projects')
-        .then(res => res.json())
-        .then((data) => {
-          this.setState({ projects: data })
+function Projects(){
+    const [data, setData] = useState([]);
+    const fetchApi = async () => {
+        await fetch('http://localhost:5000/api/projects', {
+            method: "GET",
+            headers: {
+                "content-type": "application/json",
+                "Access-Control-Allow-Origin": "http://localhost:3000"
+            },
         })
-        .catch(console.log)
-    }
+        .then((r) => r.json())
+        .then((response) => setData(response));
+    };
 
-    render () {
-        return (
-            <Pcards projects = {this.state.projects} />
-        );
-    }
+    useEffect(() => {
+        fetchApi();
+    }, []);
+
+    return (
+        <Pcards projects = {data} />
+    )
 }
 
 export default Projects;
