@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 function Home(){
     const [data, setData] = useState([]);
     const fetchApi = async () => {
-        await fetch("http://localhost:8080/api/projects", {
+        await fetch("http://localhost:80/api/projects", {
             method: "GET",
             headers: {
                 "content-type": "application/json",

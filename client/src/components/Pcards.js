@@ -6,7 +6,7 @@ const Pcards = ({ projects }) => {
     return (
         <div>
             <CardColumns>
-                {projects.map((projects) => (
+                {Array.isArray(projects) && projects.map((projects) => (
                     <Card>
                         <Card.Img variant="top" src={"http://localhost:8000" + projects.images[0].file_path + projects.images[0].file_name + projects.images[0].file_type} />
                         <Card.Body>

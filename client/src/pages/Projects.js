@@ -4,7 +4,7 @@ import Pcards from '../components/Pcards'
 function Projects(){
     const [data, setData] = useState([]);
     const fetchApi = async () => {
-        await fetch('http://localhost:5000/api/projects', {
+        await fetch('http://localhost:80/api/projects', {
             method: "GET",
             headers: {
                 "content-type": "application/json",
