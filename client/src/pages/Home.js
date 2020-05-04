@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 function Home(){
     const [data, setData] = useState([]);
     const fetchApi = async () => {
-        await fetch("http://cab-cs467.net:80/api/projects", {
+        await fetch("https://cab-cs467.net:443/api/projects", {
             method: "GET",
             headers: {
                 "content-type": "application/json",

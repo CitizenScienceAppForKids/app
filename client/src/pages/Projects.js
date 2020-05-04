@@ -4,7 +4,7 @@ import Pcards from '../components/Pcards'
 function Projects(){
     const [data, setData] = useState([]);
     const fetchApi = async () => {
-        await fetch('http://cab-cs467.net:80/api/projects', {
+        await fetch('https://cab-cs467.net:443/api/projects', {
             method: "GET",
             headers: {
                 "content-type": "application/json",
