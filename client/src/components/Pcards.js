@@ -1,6 +1,7 @@
 import React from 'react'
 import Card from 'react-bootstrap/Card'
 import CardColumns from 'react-bootstrap/CardColumns'
+import { Link } from "react-router-dom";
 
 const Pcards = ({ projects }) => {
 
@@ -17,7 +18,9 @@ const Pcards = ({ projects }) => {
                             </Card.Text>
                         </Card.Body>
                         <Card.Footer>
-                            <small className="text-muted">Last updated 3 mins ago</small>
+                            <Link to={{
+                                pathname: '/project', search: '?pid=' + projects.pid
+                            }}>View Project</Link>
                         </Card.Footer>
                     </Card>
                 ))}

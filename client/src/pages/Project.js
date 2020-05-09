@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import Pcards from '../components/Pcards.js';
+import Pview from '../components/Pview';
+import * as QueryString from "query-string";
 
-function Projects(){
+function Project(props){
+    const params = QueryString.parse(props.location.search);
     const [data, setData] = useState([]);
     const fetchApi = async () => {
-        await fetch('http://localhost:5000/api/projects', {
+        await fetch('http://localhost:5000/api/projects/' + params.pid, {
             method: "GET",
             headers: {
                 "content-type": "application/json",
@@ -21,9 +23,9 @@ function Projects(){
 
     return (
         <div>
-            <Pcards projects = {data} />
+            <Pview project = {data} />
         </div>
     )
 }
 
-export default Projects;
+export default Project;
