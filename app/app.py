@@ -1,4 +1,5 @@
 from flask import Flask, request, make_response, Blueprint
+from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from api.ProjectsAPI import projects_api
@@ -23,8 +24,10 @@ from frontend.views import mod
 
 def create_app():
     app = Flask(__name__, template_folder='template')
+    cors = CORS(app)
     app.register_blueprint(projects_api)
     app.register_blueprint(observations_api)
+    app.register_blueprint(images_api)
     app.register_blueprint(mod)
     return app
 
@@ -33,9 +36,9 @@ app = create_app()
 limiter = Limiter(
     app,
     key_func=get_remote_address,
-    default_limits=["100 per day"],
+    default_limits=["1000 per hour"],
 )
 
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host='127.0.0.1', port=5000, debug=True)
