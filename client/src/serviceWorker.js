@@ -8,7 +8,7 @@
 // resources are updated in the background.
 
 // To learn more about the benefits of this model and instructions on how to
-// opt-in, read https://bit.ly/CRA-PWA
+// opt-in, read https://cra.link/PWA
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
@@ -21,7 +21,7 @@ const isLocalhost = Boolean(
 );
 
 export function register(config) {
-  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+  if ('serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
     if (publicUrl.origin !== window.location.origin) {
@@ -43,7 +43,7 @@ export function register(config) {
         navigator.serviceWorker.ready.then(() => {
           console.log(
             'This web app is being served cache-first by a service ' +
-              'worker. To learn more, visit https://bit.ly/CRA-PWA'
+              'worker. To learn more, visit https://cra.link/PWA'
           );
         });
       } else {
@@ -71,7 +71,7 @@ function registerValidSW(swUrl, config) {
               // content until all client tabs are closed.
               console.log(
                 'New content is available and will be used when all ' +
-                  'tabs for this page are closed. See https://bit.ly/CRA-PWA.'
+                  'tabs for this page are closed. See https://cra.link/PWA.'
               );
 
               // Execute callback
@@ -100,6 +100,7 @@ function registerValidSW(swUrl, config) {
 
 function checkValidServiceWorker(swUrl, config) {
   // Check if the service worker can be found. If it can't reload the page.
+  console.log(`SERVICE WORKER URL ${swUrl}`);
   fetch(swUrl, {
     headers: { 'Service-Worker': 'script' },
   })
@@ -138,4 +139,47 @@ export function unregister() {
         console.error(error.message);
       });
   }
+}
+
+// BOILERPLATE STOPS HERE
+
+navigator.serviceWorker.addEventListener('ready', () => {
+	navigator.serviceWorker.addEventListener('sync', function(event) {
+	  if (event.tag == 'observationSync') {
+		event.waitUntil(uploadObservation())
+	  }
+	})
+})
+
+function uploadObservation() {
+	console.log("got here")
+	let db;
+	// pull post request from indexedDB
+	var request = indexedDB.open("observation_db");
+	request.addEventListener('success', (e) => {
+		db = e.target.result;
+		db.transaction('observation_data_os').objectStore('observation_data_os').getAll().addEventListener('success', (e) => {
+			e.target.result.forEach((observation) => {
+				fetch('/TODO', {
+					method: 'post',
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify(observation)
+				})
+				.then(() => {
+						console.log("Something went okay");
+				})
+				.catch(() => {
+					console.log("Somthing is borked");
+				});
+			})
+		});
+	});
+
+	request.addEventListener('error', (e) => {
+		console.log("Couldn't open database in service worker!");
+	});
+
+	// TODO clear the entry from indexed DB
 }

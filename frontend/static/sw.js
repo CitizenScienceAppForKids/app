@@ -3,13 +3,7 @@
 
 var CACHE_NAME = 'my-site-cache-v1';
 var urlsToCache = [
-  '/',
-	'/about',
-	'/observations/new',
-	'/observations',
-	'/projects',
-	'/projects/specific-project',
-	'/projects/visualization'
+  '/'
 ];
 
 self.addEventListener('install', function(event) {
@@ -57,5 +51,5 @@ function uploadImage() {
 		console.log("Couldn't open database in service worker!");
 	});
 
-	// clear the entry from indexed DB
+	// TODO clear the entry from indexed DB
 }

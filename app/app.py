@@ -5,6 +5,7 @@ from flask_limiter.util import get_remote_address
 from api.ProjectsAPI import projects_api
 from api.ObservationsAPI import observations_api
 from api.ImagesAPI import images_api
+from api.S3ImagesAPI import s3_images_api
 from api.functions.utilities import *
 from json2html import *
 import json
