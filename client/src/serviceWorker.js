@@ -32,8 +32,8 @@ export function register(config) {
     }
 
     window.addEventListener('load', () => {
-      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
-
+      const swUrl = `${process.env.PUBLIC_URL}/sw.js`;
+	  
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
         checkValidServiceWorker(swUrl, config);
@@ -139,47 +139,4 @@ export function unregister() {
         console.error(error.message);
       });
   }
-}
-
-// BOILERPLATE STOPS HERE
-
-navigator.serviceWorker.addEventListener('ready', () => {
-	navigator.serviceWorker.addEventListener('sync', function(event) {
-	  if (event.tag == 'observationSync') {
-		event.waitUntil(uploadObservation())
-	  }
-	})
-})
-
-function uploadObservation() {
-	console.log("got here")
-	let db;
-	// pull post request from indexedDB
-	var request = indexedDB.open("observation_db");
-	request.addEventListener('success', (e) => {
-		db = e.target.result;
-		db.transaction('observation_data_os').objectStore('observation_data_os').getAll().addEventListener('success', (e) => {
-			e.target.result.forEach((observation) => {
-				fetch('/TODO', {
-					method: 'post',
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify(observation)
-				})
-				.then(() => {
-						console.log("Something went okay");
-				})
-				.catch(() => {
-					console.log("Somthing is borked");
-				});
-			})
-		});
-	});
-
-	request.addEventListener('error', (e) => {
-		console.log("Couldn't open database in service worker!");
-	});
-
-	// TODO clear the entry from indexed DB
 }

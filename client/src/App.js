@@ -10,10 +10,7 @@ function App() {
     <BrowserRouter>
       <Header />
       <Switch>
-        <Route path='/' component={Projects} exact />
-      </Switch>
-      <Switch>
-        <Route path='/test' component={TestObservationPage} exact />
+        <Route path='/' component={TestObservationPage} exact />
       </Switch>
 
     </BrowserRouter>

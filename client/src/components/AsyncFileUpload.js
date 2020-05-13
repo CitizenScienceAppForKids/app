@@ -1,15 +1,20 @@
 // This will register a sync with the service worker as soon as the worker is ready
-// TODO sync should happen once we've stored everything in DB
-navigator.serviceWorker.ready.then((registration) => {
-	document.getElementById('testSubmit').addEventListener('click', () => {
-		console.log("Registering sync with service worker")
-		registration.sync.register('observationSync')
-		.catch((err) => {
-			console.log(err)
-			return err
+if ('serviceWorker' in navigator && 'SyncManager' in window) {
+	navigator.serviceWorker.ready.then((registration) => {
+		document.getElementById('testSubmit').addEventListener('click', (e) => {
+			registration.sync.register('observationSync')
+			.then(() => {
+				console.log("Registered a sync")
+			})
+			.catch((err) => {
+				console.log(err)
+				return err
+			})
 		})
 	})
-})
+} else {
+	console.log("This browser is unsupported.")
+}
 
 // This should be attached to the form itself to override submit logic
 window.addEventListener("DOMContentLoaded", function() {
@@ -112,6 +117,6 @@ function storeInIndexedDB(newItem) {
 
 	transaction.onerror = function() {
 		console.log('Transaction not opened due to error');
-		// TODO show some error message to the user
 	};
+
 }
