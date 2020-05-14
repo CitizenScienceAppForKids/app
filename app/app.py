@@ -24,14 +24,20 @@ from frontend.views import mod
 
 def create_app():
     app = Flask(__name__, template_folder='template')
-    cors = CORS(app)
     app.register_blueprint(projects_api)
     app.register_blueprint(observations_api)
     app.register_blueprint(images_api)
     app.register_blueprint(mod)
     return app
 
+
 app = create_app()
+
+cors = CORS(app)
+CORS(projects_api)
+CORS(observations_api)
+CORS(images_api)
+CORS(mod)
 
 limiter = Limiter(
     app,
