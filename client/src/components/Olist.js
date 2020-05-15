@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 import ListGroup from 'react-bootstrap/ListGroup'
 import ListGroupItem from 'react-bootstrap/ListGroupItem'
 import Image from 'react-image-resizer';
-import Observation from '../psages/Observation';
+import Observation from '../pages/Observation';
 import '../index.css';
 import "react-popupbox/dist/react-popupbox.css"
 import {
