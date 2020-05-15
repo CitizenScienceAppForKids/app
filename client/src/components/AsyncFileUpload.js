@@ -24,7 +24,7 @@ window.addEventListener("DOMContentLoaded", function() {
 let db;
 
 window.addEventListener("load", function() {
-	let request = window.indexedDB.open('observation_db', 2);
+	let request = window.indexedDB.open('observation_db', 3);
 
 	request.onerror = function() {
 		console.log('Database failed to open');
@@ -40,6 +40,7 @@ window.addEventListener("load", function() {
 		
 		let objectStore = db.createObjectStore('observation_data_os', { keyPath: 'id', autoIncrement:true });
 		objectStore.createIndex('img_string', 	'img_string', 	{ unique: false });
+		objectStore.createIndex('file_type', 	'file_type', 	{ unique: false });
 		objectStore.createIndex('project_id', 	'project_id', 	{ unique: false });
 		objectStore.createIndex('date', 	  	'date', 		{ unique: false });
 		objectStore.createIndex('title',      	'title', 		{ unique: false });
@@ -78,9 +79,8 @@ function submitForm(e) {
 
 	reader.addEventListener("load", (e) => {
 		// FileRead appends the type to the front of the base64 string - consider moving split logic to server
-		var base64ImgType   = e.target.result.split(',')[0];
-		var base64ImgString = e.target.result.split(',')[1];
-		newItem.img_string = base64ImgString;
+		newItem.file_type  = e.target.result.split(',')[0];
+		newItem.img_string = e.target.result.split(',')[1];
 		storeInIndexedDB(newItem);
 	});
 

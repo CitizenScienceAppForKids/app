@@ -35,44 +35,74 @@ workbox.routing.registerRoute(
 }
 
 self.addEventListener('sync', (e) => {
-	if (e.tag == 'observationSync') {
-	console.log('asdf')
-	e.waitUntil(uploadObservation())
+	if (e.tag === 'observationSync') {
+		e.waitUntil(uploadPendingObservations())
 	} else {
-	  console.log('asdfasdfasd')
+	  console.log('Service Worker got a sync, but could not resolve the tag!')
 	}
 })
 
-function uploadObservation() {
-	console.log("got here")
-	return Promise.resolve('done')
+function uploadPendingObservations() {
 	let db
-	// pull post request from indexedDB
 	var request = indexedDB.open("observation_db")
 	request.addEventListener('success', (e) => {
 		db = e.target.result;
 		db.transaction('observation_data_os').objectStore('observation_data_os').getAll().addEventListener('success', (e) => {
 			e.target.result.forEach((observation) => {
-				fetch('/TODO', {
-					method: 'post',
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify(observation)
-				})
-				.then(() => {
-						console.log("Something went okay")
-				})
-				.catch(() => {
-					console.log("Somthing is borked")
-				})
+				if (observation.img_string) {
+					postImageThenObservationData(observation)	
+				} else {
+					postObservationData(observation)
+				}
+
+				// TODO clear the entry from indexed DB
 			})
 		})
 	})
 
 	request.addEventListener('error', (e) => {
-		console.log("Couldn't open database in service worker!");
+		console.log("Couldn't open database in service worker! Can't post observations!");
 	})
 
-	// TODO clear the entry from indexed DB
+}
+
+function postImageThenObservationData(payload) {
+		// TODO create endpoint and origin for staging and production
+		const img_payload = (({ img_string, file_type }) => ({ img_string, file_type }))(payload);
+		delete payload.img_string	
+		fetch('/api/s3/images', {
+			method: 'post',
+			headers: {
+				"Content-Type": "application/json",
+				"Host": "localhost",
+				"Origin": "localhost"
+			},
+			body: JSON.stringify(img_payload)
+		})
+		.then((response) => {
+			console.log(response)
+			// postObservationData(payload)	
+		})
+		.catch((err) => {
+			console.log(err)
+		})
+}
+
+function postObservationData(payload) {
+		const endpoint = '/projects/' + payload.project_id + '/observations'
+		fetch(endpoint, {
+			method: 'post',
+			headers: {
+				"Content-Type": "application/json",
+				"Host":			"localhost",
+				"Origin": 		"localhost"
+			},
+			body: JSON.stringify(payload)
+		})
+		.then((response) => {
+			postObservationData(payload)	
+		})
+		.catch((err) => {
+			console.log(err)
+		})
 }

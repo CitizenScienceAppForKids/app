@@ -1,4 +1,5 @@
 import boto3
+import hashlib
 from botocore.exceptions import ClientError
 
 session = boto3.Session(
@@ -11,9 +12,10 @@ bucket = s3.Bucket('cab-cs467-images')
 # Retrieve image
 
 # Store image
-def store_image(image_data, key):
+def store_image(image_blob, file_type):
     try:
-        response = bucket.upload_fileobj(image_data, key)
+        key = hashlib.sha256(image_blob).hexdigest() + '.' + file_type
+        response = bucket.upload_fileobj(image_blob, key)
     except ClientError:
         return FALSE
     return TRUE
