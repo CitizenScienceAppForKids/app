@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import Pcards from '../components/Pcards'
+import Pcards from "../components/Pcards"
 
 function Projects(){
+	const endpoint = (process.env.NODE_ENV === "production") ? "https://cab-cs467.net:443/api/projects" : "http://localhost:5000/api/projects"
+	const origin   = (process.env.NODE_ENV === "production") ? "cab-cs467.net" : "localhost"
     const [data, setData] = useState([]);
     const fetchApi = async () => {
-        await fetch('http://localhost:5000/api/projects', {
+        await fetch(endpoint, {
             method: "GET",
             headers: {
                 "content-type": "application/json",
-                "Access-Control-Allow-Origin": "http://localhost:3000"
+                "Host": "localhost",
+                "Origin": origin
             },
         })
         .then((r) => r.json())
@@ -20,7 +23,9 @@ function Projects(){
     }, []);
 
     return (
-        <Pcards projects = {data} />
+        <div>
+            <Pcards projects = {data} />
+        </div>
     )
 }
 
