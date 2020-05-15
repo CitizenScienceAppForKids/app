@@ -23,7 +23,9 @@ function Projects(){
     }, []);
 
     return (
-        <Pcards projects = {data} />
+        <div>
+            <Pcards projects = {data} />
+        </div>
     )
 }
 
