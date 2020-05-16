@@ -1,13 +1,26 @@
-from flask import Flask, Blueprint, request, make_response
+from flask import Flask, Blueprint, request, make_response, current_app
 from json2html import *
 import json
 import base64
-
+import logging
+import boto3
+from botocore.exceptions import ClientError
+import hashlib
+from io import BytesIO
+import re
+import sys
+import traceback
 from api.functions.utilities import *
 from api.functions.validation import *
 from api.functions.helpers import *
 
 s3_storage_api = Blueprint('s3_storage_api', __name__)
+session = boto3.Session(
+    aws_access_key_id     = os.getenv("S3_ACCESS_KEY_ID"),
+    aws_secret_access_key = os.getenv("S3_SECRET_ACCESS_KEY")
+)
+s3     = session.resource('s3')
+bucket = s3.Bucket('cab-cs467-images')
 
 ## --------------------------------------------------------------------##
 ## Images ENDPOINT Glossary
@@ -44,21 +57,26 @@ def createImage():
         try:
             # Get request information
             content = request.get_json()
-            app.logger("content: %s", content) 
             # Check for All Required Image Attributes & Validate
             try:
                 if not content['img_string'] and not content['file_type']:
                     return(makeResponse(msg_invl), 400)
                 else:
-                    store_image(base64.b64decode(content['img_string']), content['file_type']) 
+                    decodedImgString = base64.b64decode(content['img_string'])
+                    # https://stackoverflow.com/questions/3335562/regex-to-select-everything-between-two-characters
+                    fileType         = re.search("/([^;]*)", content['file_type']).group(1)
+                    key              = hashlib.sha256(decodedImgString).hexdigest() + '.' + fileType 
+                    bucket.upload_fileobj(BytesIO(decodedImgString), key)
+                    s3.Object(bucket.name, key).wait_until_exists()
             except:
+                current_app.logger.info(f"{traceback.format_exc()}")
                 return(makeResponse(msg_miss), 400)
 
             # Write success response
-            msg_pass = json.dumps(
-                [{ "TODO": TODO, "self": request.url + "/" + str(new_id) }],
-                indent=4, separators=(',', ':'), default=str
-            )
+            msg_pass = json.dumps([{
+                "key": key,
+                "self": request.url + "/api/images"}],
+                indent=4, separators=(',', ':'), default=str)
                 
             return(makeResponse(msg_pass), 201)
 

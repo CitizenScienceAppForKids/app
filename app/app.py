@@ -38,7 +38,7 @@ cors = CORS(app)
 CORS(projects_api)
 CORS(observations_api)
 CORS(images_api)
-CORS(mod)
+CORS(s3_storage_api)
 
 limiter = Limiter(
     app,
