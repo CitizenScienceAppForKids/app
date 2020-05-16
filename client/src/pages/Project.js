@@ -23,7 +23,7 @@ function Project(props){
 
     return (
         <div>
-            <Pview project = {data} />
+            <Pview  id = {params.pid} project = {data}/>
         </div>
     )
 }

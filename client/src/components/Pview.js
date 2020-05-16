@@ -1,26 +1,69 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from "react-router-dom";
+import Card from 'react-bootstrap/Card'
+import Map from './Map'
 
-const Pview = ({ project }) => {
+
+const Pview = (project) => {
+    
+    console.log(project)
+    const [data, setData] = useState([]);
+    const fetchApi = async () => {
+
+        await fetch('http://localhost:5000/api/projects/' + project.id + '/observations', {
+            method: "GET",
+            headers: {
+                "content-type": "application/json",
+                "Access-Control-Allow-Origin": "http://localhost:3000"
+            },
+        })
+        .then((r) => r.json())
+        .then((response) => setData(response));
+    };
+
+    useEffect(() => {
+        fetchApi();
+    }, []);
 
     return (
         <div>
-            {project.map((project) => (
-                <div key={project.pid}>
-                    <h2>{project.title}</h2>
-                    <p>{project.description}</p>
-                    <Link to={{
-                                pathname: '/observations', search: '?pid=' + project.pid
-                    }}>View Observations</Link>
-                    <br></br>
-                    <Link to={{
-                                pathname: '/newobservation', search: '?pid=' + project.pid
-                    }}>Make Observation</Link>
+        {project.project.map((project) => (
+            <div>
+                <Card>
+                    <Card.Header key={project.pid}>
+                        {project.title}
+                        <span style={{float: 'right', color: '#17a2b8'}}>{project.type}</span>
+                    </Card.Header>
+                    <Card.Body>
+                        <div style={{display: 'flex'}}>
+                            <div style={{flexGrow: '1'}}>
+                                <Card.Img variant="top" src={"http://localhost:8000" + project.image.file_path + project.image.file_name + project.image.file_type} alt="Image not found" onError={(e)=>{e.target.onerror = null; e.target.src="/images/no_image.jpg"}} />
+                            </div>
 
-                </div>
-                
-                
-            ))}
+                            <div style={{flexGrow: '2', paddingRight: '40px', paddingLeft: '40px'}}>
+                                <Card.Text style={{clear: 'both'}}>{project.description}</Card.Text>
+                            </div>
+
+                            <div style={{flexGrow: '1', textAlign: 'center', padding: '20px'}}>
+                            <Link to={{
+                                        pathname: '/observations', search: '?pid=' + project.pid
+                            }}>
+                                <h4 style={{color: '#17a2b8'}}>Observations</h4>
+                            </Link>
+                            <Card.Text style={{fontSize: '80px'}}>{data.length}</Card.Text>
+                            </div>
+                        </div>
+
+                        <div style={{display: 'flex'}}>
+                            <div style={{flexGrow: '1', textAlign: 'center', padding: '20px', marginLeft: '25%', marginRight: '25%'}}>
+                                <Map pMap = {data} />
+                            </div>
+                        </div>
+
+                    </Card.Body>
+                </Card>
+            </div>
+        ))}
         </div>
     )
 };
