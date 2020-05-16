@@ -47,15 +47,26 @@ function uploadPendingObservations() {
 	var request = indexedDB.open("observation_db")
 	request.addEventListener('success', (e) => {
 		db = e.target.result;
-		db.transaction('observation_data_os').objectStore('observation_data_os').getAll().addEventListener('success', (e) => {
-			e.target.result.forEach((observation) => {
-				if (observation.img_string) {
-					postImageThenObservationData(observation)	
-				} else {
-					postObservationData(observation)
-				}
-
-				// TODO clear the entry from indexed DB
+        transaction = db.transaction('observation_data_os', 'readwrite').objectStore('observation_data_os')
+		transaction.getAllKeys().addEventListener('success', (e) => {
+            console.log(`Keys ${e.target.result}`)
+			e.target.result.forEach((key) => {
+			    transaction.get(key).addEventListener('success', (e) => {
+                    console.log(`Observation ${e.target.result}`)
+                    observation = e.target.result
+                    new Promise(() => { if (observation.img_string) {
+                        postImageThenObservationData(observation)	
+                    } else {
+                        postObservationData(observation)
+                    }
+                    })
+                    .then(() => {
+                        transaction.delete(key)
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+                }) 
 			})
 		})
 	})
@@ -68,9 +79,10 @@ function uploadPendingObservations() {
 
 function postImageThenObservationData(payload) {
 		// TODO create endpoint and origin for staging and production
+        // https://stackoverflow.com/questions/17781472/how-to-get-a-subset-of-a-javascript-objects-properties
 		const img_payload = (({ img_string, file_type }) => ({ img_string, file_type }))(payload);
 		delete payload.img_string	
-		fetch('/api/s3/images', {
+		fetch('http://localhost:5000/api/s3/images', {
 			method: 'post',
 			headers: {
 				"Content-Type": "application/json",

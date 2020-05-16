@@ -6,6 +6,8 @@ import Projects from './pages/Projects';
 import Project from './pages/Project';
 import Observations from './pages/Observations';
 import Observation from './pages/Observation';
+import TestObservationPage from './pages/TestObservationPage'
+import './components/AsyncFileUpload.js';
 import NewOb from './pages/NewOb';
 
 
@@ -15,7 +17,7 @@ function App() {
       <BrowserRouter>
           <NavBar />
             <Switch>
-              <Route path='/' component={Home} exact />
+              <Route path='/' component={TestObservationPage} exact />
               <Route path='/projects' component={Projects} exact />
               <Route path='/project' component={Project} exact />
               <Route path='/observations' component={Observations} exact />
