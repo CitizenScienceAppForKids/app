@@ -7,7 +7,6 @@ import boto3
 from botocore.exceptions import ClientError
 import hashlib
 from io import BytesIO
-import re
 import sys
 import traceback
 from api.functions.utilities import *
@@ -26,8 +25,8 @@ bucket = s3.Bucket('cab-cs467-images')
 ## Images ENDPOINT Glossary
 ## --------------------------------------------------------------------##
 ##
-## Upload an image to S3                            POST /api/images/s3
-## TODO Retrieve an image from S3                   GET /api/images/s3/<iid>
+## Upload an image to S3                            POST /api/s3/images
+## Retrieve an image from S3                        GET /api/s3/<iid>
 ## TODO Update an image in S3                       PATCH /api/images/s3/<iid>
 ## TODO Delete an Image                             DELETE /api/images/s3/<iid>
 ##
@@ -63,9 +62,7 @@ def createImage():
                     return(makeResponse(msg_invl), 400)
                 else:
                     decodedImgString = base64.b64decode(content['img_string'])
-                    # https://stackoverflow.com/questions/3335562/regex-to-select-everything-between-two-characters
-                    fileType         = re.search("/([^;]*)", content['file_type']).group(1)
-                    key              = hashlib.sha256(decodedImgString).hexdigest() + '.' + fileType 
+                    key              = hashlib.sha256(decodedImgString).hexdigest() + '.' + content['file_type']
                     bucket.upload_fileobj(BytesIO(decodedImgString), key)
                     s3.Object(bucket.name, key).wait_until_exists()
             except:

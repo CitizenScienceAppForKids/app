@@ -70,8 +70,10 @@ function storeInIndexedDB(newItem, imgFile) {
             let reader  = new FileReader()
             reader.readAsDataURL(imgFile)
             reader.onload = (e) => {
-                newItem.file_type  = e.target.result.split(',')[0]
-                newItem.img_string = e.target.result.split(',')[1]
+                var s                    = e.target.result.split(',')[0]
+                newItem.image            = {}
+                newItem.image.file_type  = s.substring(s.lastIndexOf('/') + 1, s.lastIndexOf(';'))
+                newItem.img_string       = e.target.result.split(',')[1]
                 resolve()
             }
             reader.onerror = (e) => {

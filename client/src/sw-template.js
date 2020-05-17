@@ -54,11 +54,12 @@ function uploadPendingObservations() {
 			    transaction.get(key).addEventListener('success', (e) => {
                     console.log(`Observation ${e.target.result}`)
                     observation = e.target.result
-                    new Promise(() => { if (observation.img_string) {
-                        postImageThenObservationData(observation)	
-                    } else {
-                        postObservationData(observation)
-                    }
+                    new Promise(() => {
+                        if (observation.img_string) {
+                            postImageThenObservationData(observation)	
+                        } else {
+                            postObservationData(observation)
+                        }
                     })
                     .then(() => {
                         transaction.delete(key)
@@ -79,9 +80,11 @@ function uploadPendingObservations() {
 
 function postImageThenObservationData(payload) {
 		// TODO create endpoint and origin for staging and production
-        // https://stackoverflow.com/questions/17781472/how-to-get-a-subset-of-a-javascript-objects-properties
-		const img_payload = (({ img_string, file_type }) => ({ img_string, file_type }))(payload);
-		delete payload.img_string	
+        const img_payload = {
+            "img_string": payload.img_string,
+            "file_type":  payload.image.file_type
+        }
+        delete payload.img_string	
 		fetch('http://localhost:5000/api/s3/images', {
 			method: 'post',
 			headers: {
@@ -92,8 +95,15 @@ function postImageThenObservationData(payload) {
 			body: JSON.stringify(img_payload)
 		})
 		.then((response) => {
-			console.log(response)
-			// postObservationData(payload)	
+            if (response.status == '200' || response.status == '201') {
+                response.json().then((body) => {
+                    payload.image.file_name = body[0].key
+                    payload.image.file_path = body[0].key
+                    postObservationData(payload)
+                })
+            } else {
+                console.log(`Could not store image ${response.status}`)
+            }
 		})
 		.catch((err) => {
 			console.log(err)
@@ -101,7 +111,7 @@ function postImageThenObservationData(payload) {
 }
 
 function postObservationData(payload) {
-		const endpoint = '/projects/' + payload.project_id + '/observations'
+		const endpoint = 'http://localhost:5000/api/projects/' + payload.project_id + '/observations'
 		fetch(endpoint, {
 			method: 'post',
 			headers: {
@@ -112,7 +122,7 @@ function postObservationData(payload) {
 			body: JSON.stringify(payload)
 		})
 		.then((response) => {
-			postObservationData(payload)	
+			console.log(response)	
 		})
 		.catch((err) => {
 			console.log(err)
