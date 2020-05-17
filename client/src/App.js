@@ -17,7 +17,8 @@ function App() {
       <BrowserRouter>
           <NavBar />
             <Switch>
-              <Route path='/' component={TestObservationPage} exact />
+              <Route path='/' component={Home} exact />
+              <Route path='/test' component={TestObservationPage} exact />
               <Route path='/projects' component={Projects} exact />
               <Route path='/project' component={Project} exact />
               <Route path='/observations' component={Observations} exact />
