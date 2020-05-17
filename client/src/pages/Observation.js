@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import Olist from '../components/Olist';
+import Oview from '../components/Oview'
 import * as QueryString from "query-string";
 
-function Observations(props){
-    const params = QueryString.parse(props.location.search);
+function Observation(oid){
+    console.log(oid)
     const [data, setData] = useState([]);
     const fetchApi = async () => {
-        await fetch('http://localhost:5000/api/projects/' + params.pid + '/observations', {
+        await fetch('http://localhost:5000/api/observations/' + oid.obs, {
             method: "GET",
             headers: {
                 "content-type": "application/json",
@@ -19,13 +19,13 @@ function Observations(props){
 
     useEffect(() => {
         fetchApi();
-    }, []);
+    }, [oid]);
 
     return (
         <div>
-            <Olist observations = {data} />
+            <Oview observation = {data} />
         </div>
     )
 }
 
-export default Observations;
+export default Observation;

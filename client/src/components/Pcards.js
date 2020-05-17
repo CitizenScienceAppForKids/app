@@ -11,7 +11,7 @@ const Pcards = ({ projects }) => {
             <div>
                 <Accordion>
                     <CardColumns>
-                        {projects.map((projects) => (
+                        {Array.isArray(projects) && projects.map((projects) => (
                             <Card key={projects.pid}>
                                 <Card.Img variant="top" src={"http://localhost:8000" + projects.images[0].file_path + projects.images[0].file_name + projects.images[0].file_type} alt="Image not found" onError={(e)=>{e.target.onerror = null; e.target.src="/images/no_image.jpg"}} />
                                 <Card.Body>
