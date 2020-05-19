@@ -13,8 +13,8 @@ function NavBar(){
         <Navbar bg="dark" variant="dark">
             <Navbar.Brand href="#home">Citizen Science</Navbar.Brand>
             <Nav className="mr-auto">
-                <Nav.Link><Link className='nav-link' to='/' >Home</Link></Nav.Link>
-                <Nav.Link><Link className='nav-link' to='/projects' >Projects</Link></Nav.Link>
+                <Link className='nav-link' to='/' >Home</Link>
+                <Link className='nav-link' to='/projects' >Projects</Link>
             </Nav>
             <Form inline>
             <FormControl type="text" placeholder="Search" className="mr-sm-2" />

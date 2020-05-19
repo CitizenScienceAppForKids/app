@@ -5,8 +5,9 @@ import * as QueryString from "query-string";
 function Project(props){
     const params = QueryString.parse(props.location.search);
     const [data, setData] = useState([]);
+    const endpoint = 'http://localhost:5000/api/projects/${params.pd}' + params.pid
     const fetchApi = async () => {
-        await fetch('http://localhost:5000/api/projects/' + params.pid, {
+        await fetch(`http://localhost:5000/api/projects/${params.pid}`, {
             method: "GET",
             headers: {
                 "content-type": "application/json",
@@ -19,7 +20,8 @@ function Project(props){
 
     useEffect(() => {
         fetchApi();
-    }, []);
+        console.log(params)
+    }, [params.pid]);
 
     return (
         <div>

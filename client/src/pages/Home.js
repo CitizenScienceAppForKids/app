@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import history from '../components/history';
+import CarouselComponent from "../components/Carousel/Carousel";
+import './Home.css';
 
 function Home(){
 
@@ -24,9 +27,15 @@ function Home(){
 
     return (
         <div>
-            Home - Give an intro to the website (ie logo and description), along with a "view projects" button
+            <h1 class='tc'>{'Citizen Science for Kids!'}</h1>
+            <div className='tc'>
+                    <button onClick={() => history.push('/projects')} className='w-30 grow f4 link ph3 pv2 dib white bg-light-green center'>View Projects</button>
+            </div>
+            <br/>
+            <CarouselComponent />
         </div>
-    )
+        );
 }
+
 
 export default Home;

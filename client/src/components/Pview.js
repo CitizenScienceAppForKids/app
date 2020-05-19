@@ -3,10 +3,8 @@ import { Link } from "react-router-dom";
 import Card from 'react-bootstrap/Card'
 import Map from './Map'
 
-
 const Pview = (project) => {
-    
-    console.log(project)
+
     const [data, setData] = useState([]);
     const fetchApi = async () => {
 
@@ -23,14 +21,14 @@ const Pview = (project) => {
 
     useEffect(() => {
         fetchApi();
-    }, []);
+    }, [project.id]);
 
     return (
         <div>
         {project.project.map((project) => (
             <div>
-                <Card>
-                    <Card.Header key={project.pid}>
+                <Card key={project.pid}>
+                    <Card.Header >
                         {project.title}
                         <span style={{float: 'right', color: '#17a2b8'}}>{project.type}</span>
                     </Card.Header>
@@ -54,6 +52,7 @@ const Pview = (project) => {
                             </div>
                         </div>
 
+                        <Link to={"/newobservation?pid=" + project.pid + "&type=" + project.type} >Create New Observation</Link>
                         <div style={{display: 'flex'}}>
                             <div style={{flexGrow: '1', textAlign: 'center', padding: '20px', marginLeft: '25%', marginRight: '25%'}}>
                                 <Map pMap = {data} />

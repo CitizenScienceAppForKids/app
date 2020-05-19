@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
 import ListGroup from 'react-bootstrap/ListGroup'
@@ -14,8 +14,6 @@ import {
 
 
 const Olist = ({ observations }) => {
-
-    const ref = useRef()
 
     const popupboxConfig = {
         titleBar: {
@@ -45,7 +43,7 @@ const Olist = ({ observations }) => {
             <ListGroupItem key={observations.oid}>
                 <Card>
                     <Card.Header>{observations.title} 
-                        <Button ref={ref} value={observations.oid} onClick={(e) => openPopupbox(e.target.value)} size="sm" style={{float: 'right', backgroundColor: '#17a2b8', borderColor: '#17a2b8'}}>View</Button>
+                        <Button value={observations.oid} onClick={(e) => openPopupbox(e.target.value)} size="sm" style={{float: 'right', backgroundColor: '#17a2b8', borderColor: '#17a2b8'}}>View</Button>
                     </Card.Header>
                         
                     <Card.Body>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Router, Route, Switch } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import Home from './pages/Home';
 import Projects from './pages/Projects';
@@ -7,13 +7,35 @@ import Project from './pages/Project';
 import Observations from './pages/Observations';
 import Observation from './pages/Observation';
 import NewOb from './pages/NewOb';
+import Logo from './components/Logo/Logo';
+import CarouselComponent from './components/Carousel/Carousel';
+import Particles from 'react-particles-js';
+import './App.css';
+import history from './components/history';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
+
+const particlesOptions = {
+    particles: {
+        number: {
+            value: 30,
+            density: {
+                enable: true,
+                value_area: 800
+            }
+        }
+    }
+}
 
 function App() {
   return (
     <div>
-      <BrowserRouter>
+        <Particles className='particles'
+            params={particlesOptions}
+        />
+        <Router history={history}>
           <NavBar />
+          <Logo />
             <Switch>
               <Route path='/' component={Home} exact />
               <Route path='/projects' component={Projects} exact />
@@ -22,8 +44,9 @@ function App() {
               <Route path='/observation' component={Observation} exact />
               <Route path='/newobservation' component={NewOb} exact />
             </Switch>
-      </BrowserRouter>
+        </Router>
     </div>
+
   );
 }
 

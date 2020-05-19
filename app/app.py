@@ -42,7 +42,7 @@ CORS(mod)
 limiter = Limiter(
     app,
     key_func=get_remote_address,
-    default_limits=["1000 per hour"],
+    default_limits=["5000 per hour"],
 )
 
 
