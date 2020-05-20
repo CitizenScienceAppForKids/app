@@ -22,7 +22,7 @@ function Observations(props){
 
     useEffect(() => {
         fetchApi();
-    }, []);
+    }, [params.pid]);
 
     return (
         <div>

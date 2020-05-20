@@ -6,9 +6,9 @@ import { envEndpointOrigin } from "../components/EnvHelpers.js"
 function Project(props){
     const params = QueryString.parse(props.location.search);
     const [data, setData] = useState([]);
-    const [endpoint, origin] = envEndpointOrigin('api/projects/') 
+    const [endpoint, origin] = envEndpointOrigin('api/projects/${params.pid}') 
     const fetchApi = async () => {
-        await fetch(endpoint + params.pid, {
+        await fetch(endpoint, {
             method: "GET",
             headers: {
                 "content-type": "application/json",
@@ -22,11 +22,12 @@ function Project(props){
 
     useEffect(() => {
         fetchApi();
-    }, []);
+        console.log(params)
+    }, [params.pid]);
 
     return (
         <div>
-            <Pview project = {data} />
+            <Pview  id = {params.pid} project = {data}/>
         </div>
     )
 }

@@ -4,7 +4,8 @@ import * as QueryString from "query-string";
 import { envEndpointOrigin } from "../components/EnvHelpers.js"
 
 function Observation(oid){
-    console.log(oid)
+    
+
     const [data, setData] = useState([]);
     const [endpoint, origin] = envEndpointOrigin('api/observations/') 
     const fetchApi = async () => {
