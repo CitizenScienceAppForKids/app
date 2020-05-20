@@ -10,17 +10,17 @@ function NewOb(Project){
     
     if (params.type === "Biology"){
         return (
-            <FormBio bio = {Project.pid} />
+            <FormBio id = {params.pid} />
         )
     }
     else if (params.type === "Ecology"){
         return (
-            <FormEco eco = {Project.pid} />
+            <FormEco id = {params.pid} />
         )
     }
     else if (params.type === "Climatology"){
         return (
-            <FormCli cli = {Project.pid} />
+            <FormCli id = {params.pid} />
         )
     }
 }

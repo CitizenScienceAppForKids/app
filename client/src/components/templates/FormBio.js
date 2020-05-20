@@ -3,7 +3,7 @@ import Cam from '../../pages/Cam';
 import "react-popupbox/dist/react-popupbox.css"
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
 
-function FormBio(){
+function FormBio(params){
 
     const [date, setDate] = useState("")
     const [title, setName] = useState("")
@@ -15,6 +15,7 @@ function FormBio(){
 
     const submitForm = (e) => {
         e.preventDefault();
+        console.log(params.id)
         console.log({date})
         console.log({title})
         console.log({notes})
