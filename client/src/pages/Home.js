@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import history from '../components/history';
 import CarouselComponent from "../components/Carousel/Carousel";
 import './Home.css';

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Oview from '../components/Oview'
-import * as QueryString from "query-string";
 
 function Observation(oid){
-    console.log(oid)
+    
+
     const [data, setData] = useState([]);
     const fetchApi = async () => {
         await fetch('http://localhost:5000/api/observations/' + oid.obs, {
