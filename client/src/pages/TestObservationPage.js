@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import '../components/AsyncFileUpload.js';
 
 function TestObservationPage(){
     return (

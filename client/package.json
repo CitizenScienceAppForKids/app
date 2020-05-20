@@ -25,6 +25,7 @@
     "start": "react-scripts start",
     "build-sw": "node ./src/sw-build.js",
     "build": "react-scripts build && npm run build-sw",
+    "test-build": "export REACT_APP_DEV_BUILD=true && npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

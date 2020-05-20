@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Pcards from "../components/Pcards"
+import { envEndpointOrigin } from "../components/EnvHelpers.js"
 
 function Projects(){
-	const endpoint = (process.env.NODE_ENV === "production") ? "https://cab-cs467.net:443/api/projects" : "http://localhost:5000/api/projects"
-	const origin   = (process.env.NODE_ENV === "production") ? "cab-cs467.net" : "localhost"
     const [data, setData] = useState([]);
+    const [endpoint, origin] = envEndpointOrigin('api/projects') 
     const fetchApi = async () => {
         await fetch(endpoint, {
             method: "GET",

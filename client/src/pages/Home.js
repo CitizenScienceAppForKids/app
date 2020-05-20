@@ -3,11 +3,10 @@ import { Link } from "react-router-dom";
 import history from '../components/history';
 import CarouselComponent from "../components/Carousel/Carousel";
 import './Home.css';
+import { envEndpointOrigin } from "../components/EnvHelpers.js"
 
 function Home(){
-
-	const endpoint = (process.env.NODE_ENV === "production") ? "https://cab-cs467.net:443/api/projects" : "http://localhost:5000/api/projects"
-	const origin   = (process.env.NODE_ENV === "production") ? "cab-cs467.net" : "localhost"
+    const [endpoint, origin] = envEndpointOrigin('api/projects') 
     const [data, setData] = useState([]);
     const fetchApi = async () => {
         await fetch(endpoint, {

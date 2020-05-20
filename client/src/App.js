@@ -7,7 +7,6 @@ import Project from './pages/Project';
 import Observations from './pages/Observations';
 import Observation from './pages/Observation';
 import TestObservationPage from './pages/TestObservationPage'
-import './components/AsyncFileUpload.js';
 import NewOb from './pages/NewOb';
 import Logo from './components/Logo/Logo';
 import CarouselComponent from './components/Carousel/Carousel';

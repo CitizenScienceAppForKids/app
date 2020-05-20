@@ -124,4 +124,3 @@ function storeItem(item) {
 		console.log('Transaction could not be opened')
 	}
 }
-
