@@ -92,7 +92,7 @@ def validateImage(c):
         if c["file_name"] == "":
             return False
         
-        if c["file_type"] != "png" and c["file_type"] != "jpg":
+        if c["file_type"] != "png" and c["file_type"] != "jpg" and c["file_type"] != "jpeg":
             return False
         
         if c["file_path"] == "":
@@ -108,7 +108,7 @@ def validateImages(c):
             if i["file_name"] == "":
                 return False
             
-            if i["file_type"] != "png" and c["file_type"] != "jpg":
+            if i["file_type"] != "png" and i["file_type"] != "jpg" and i["file_type"] != "jpeg":
                 return False
             
             if i["file_path"] == "":

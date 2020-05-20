@@ -7,6 +7,7 @@ import * as IDB from '../IDB.js'
 function FormBio(params){
 
     const [date,      setDate     ] = useState("")
+    const [time,      setTime     ] = useState("")
     const [title,     setName     ] = useState("")
     const [notes,     setNotes    ] = useState("")
     const [genus,     setGenus    ] = useState("")
@@ -16,15 +17,14 @@ function FormBio(params){
 
     const submitForm = (e) => {
         e.preventDefault()
-
         let newItem = { 
             project_id:   params.id,
-            date: 		  {date}.value,
-            title: 		  {title}.title,
-            notes: 		  {notes}.notes,
-            // measurements: {TODO}.value,
-            latitude:     {latitude}.latitude,
-            longitude:    {longitude}.longitude
+            date:         date + " " + time,
+            title:        title,
+            notes:        notes,
+            measurements: {"genus": genus, "species": species},
+            latitude:     latitude,
+            longitude:    longitude
         }
 
         // Expecting an image dataURI to be stored in localStorage
@@ -34,7 +34,7 @@ function FormBio(params){
             localStorage.removeItem("images")
         }
 
-        // TODO we will probably want to wrap this in a promise so we can perform some callbacks	
+        // TODO we will probably want to wrap this in a promise so we can perform some callbacks    
         IDB.storeInIndexedDB(newItem, imgData)
     }
 
@@ -63,9 +63,17 @@ function FormBio(params){
             <form onSubmit = {submitForm} >
                 <input
                 placeholder="Date"
-                type="datetime-local"
+                type="date"
                 name={date}
                 onChange={e => setDate(e.target.value)}
+                required
+                />
+                <input
+                placeholder="Time"
+                type="time"
+                step="1"
+                name={time}
+                onChange={e => setTime(e.target.value)}
                 required
                 />
                 <br />

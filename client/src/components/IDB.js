@@ -1,5 +1,5 @@
 export function storeInIndexedDB(newItem, imgData) {
-	console.log("Adding new item to indexedDB.")
+    console.log("Adding new item to indexedDB.")
     if (imgData) {
         var s                    = imgData.split(',')[0]
         newItem.image            = {}
@@ -13,13 +13,13 @@ export function storeInIndexedDB(newItem, imgData) {
 
 async function storeItem(item) {
     let request = await window.indexedDB.open('observation_db', 3)
-	request.onerror = function() {
-		console.log('Database failed to open')
-	}
+    request.onerror = function() {
+        console.log('Database failed to open')
+    }
 
-	request.onsuccess = function(e) {
-		let db = e.target.result
-		console.log('Database opened successfully')
+    request.onsuccess = function(e) {
+        let db = e.target.result
+        console.log('Database opened successfully')
         let transaction = db.transaction(['observation_data_os'], 'readwrite')
         let request     = transaction.objectStore('observation_data_os').add(item)
 
@@ -52,16 +52,16 @@ async function storeItem(item) {
         }
     }
 
-	request.onupgradeneeded = function(e) {
-		let db = e.target.result
-		let objectStore = db.createObjectStore('observation_data_os', { keyPath: 'id', autoIncrement:true })
-		objectStore.createIndex('img_string', 	'img_string', 	{ unique: false })
-		objectStore.createIndex('file_type', 	'file_type', 	{ unique: false })
-		objectStore.createIndex('project_id', 	'project_id', 	{ unique: false })
-		objectStore.createIndex('date', 	  	'date', 		{ unique: false })
-		objectStore.createIndex('title',      	'title', 		{ unique: false })
-		objectStore.createIndex('notes',      	'notes', 		{ unique: false })
-		objectStore.createIndex('measurements', 'measurements', { unique: false })
-		console.log('Database setup complete')
-	}
+    request.onupgradeneeded = function(e) {
+        let db = e.target.result
+        let objectStore = db.createObjectStore('observation_data_os', { keyPath: 'id', autoIncrement:true })
+        objectStore.createIndex('img_string',   'img_string',   { unique: false })
+        objectStore.createIndex('file_type',    'file_type',    { unique: false })
+        objectStore.createIndex('project_id',   'project_id',   { unique: false })
+        objectStore.createIndex('date',         'date',         { unique: false })
+        objectStore.createIndex('title',        'title',        { unique: false })
+        objectStore.createIndex('notes',        'notes',        { unique: false })
+        objectStore.createIndex('measurements', 'measurements', { unique: false })
+        console.log('Database setup complete')
+    }
 }
