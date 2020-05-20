@@ -4,7 +4,7 @@ import "react-popupbox/dist/react-popupbox.css"
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
 import * as IDB from '../IDB.js'
 
-function FormBio(){
+function FormBio(params){
 
     const [date,      setDate     ] = useState("")
     const [title,     setName     ] = useState("")
@@ -18,7 +18,7 @@ function FormBio(){
         e.preventDefault()
 
         let newItem = { 
-            project_id:   "1",
+            project_id:   params.id,
             date: 		  {date}.value,
             title: 		  {title}.title,
             notes: 		  {notes}.notes,
@@ -31,6 +31,7 @@ function FormBio(){
         var imgData
         if (window.localStorage.images) {
             imgData = JSON.parse(window.localStorage.images)[0]
+            localStorage.removeItem("images")
         }
 
         // TODO we will probably want to wrap this in a promise so we can perform some callbacks	
