@@ -2,29 +2,41 @@ import React, { useState, useContext } from "react";
 import Cam from '../../pages/Cam';
 import "react-popupbox/dist/react-popupbox.css"
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
+import * as IDB from '../IDB.js'
 
 function FormBio(){
 
-    const [date, setDate] = useState("")
-    const [title, setName] = useState("")
-    const [notes, setNotes] = useState("")
-    const [genus, setGenus] = useState("")
-    const [species, setSpecies] = useState("")
-    const [latitude, setLatitude] = useState("")
+    const [date,      setDate     ] = useState("")
+    const [title,     setName     ] = useState("")
+    const [notes,     setNotes    ] = useState("")
+    const [genus,     setGenus    ] = useState("")
+    const [species,   setSpecies  ] = useState("")
+    const [latitude,  setLatitude ] = useState("")
     const [longitude, setLongitude] = useState("")
 
     const submitForm = (e) => {
-        e.preventDefault();
-        console.log({date})
-        console.log({title})
-        console.log({notes})
-        console.log({genus})
-        console.log({species})
-        console.log({latitude})
-        console.log({longitude})
-        console.log(JSON.parse(window.localStorage.images))
-        localStorage.removeItem("images")
+        e.preventDefault()
+
+        let newItem = { 
+            project_id:   "1",
+            date: 		  {date}.value,
+            title: 		  {title}.title,
+            notes: 		  {notes}.notes,
+            // measurements: {TODO}.value,
+            latitude:     {latitude}.latitude,
+            longitude:    {longitude}.longitude
+        }
+
+        // Expecting an image dataURI to be stored in localStorage
+        var imgData
+        if (window.localStorage.images) {
+            imgData = JSON.parse(window.localStorage.images)[0]
+        }
+
+        // TODO we will probably want to wrap this in a promise so we can perform some callbacks	
+        IDB.storeInIndexedDB(newItem, imgData)
     }
+
 
     const popupboxConfig = {
         titleBar: {

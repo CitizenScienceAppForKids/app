@@ -6,7 +6,7 @@ import { envEndpointOrigin } from "../components/EnvHelpers.js"
 function Project(props){
     const params = QueryString.parse(props.location.search);
     const [data, setData] = useState([]);
-    const [endpoint, origin] = envEndpointOrigin('api/projects/${params.pid}') 
+    const [endpoint, origin] = envEndpointOrigin(`api/projects/${params.pid}`) 
     const fetchApi = async () => {
         await fetch(endpoint, {
             method: "GET",
