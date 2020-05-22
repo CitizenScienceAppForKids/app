@@ -42,31 +42,41 @@ self.addEventListener('sync', (e) => {
     }
 })
 
-function uploadPendingObservations() {
+async function uploadPendingObservations() {
     let db
     var request = indexedDB.open("observation_db")
     request.addEventListener('success', (e) => {
         db = e.target.result;
         transaction = db.transaction('observation_data_os', 'readwrite').objectStore('observation_data_os')
         transaction.getAllKeys().addEventListener('success', (e) => {
-            console.log(`Keys ${e.target.result}`)
             e.target.result.forEach((key) => {
                 transaction.get(key).addEventListener('success', (e) => {
                     console.log(`Observation ${e.target.result}`)
                     observation = e.target.result
-                    new Promise(() => {
-                        if (observation.img_string) {
-                            postImageThenObservationData(observation)   
-                        } else {
-                            postObservationData(observation)
-                        }
-                    })
-                    .then(() => {
-                        transaction.delete(key)
-                    })
-                    .catch((err) => {
-                        console.log(err)
-                    })
+                    if (observation.img_string) {
+                        postImage(observation).then((response) => {
+                            if (response.status == '200' || response.status == '201') {
+                                delete observation.img_string
+                                observation.image[0].file_name = response.data[0].filename
+                                observation.image[0].file_path = 'https://cab-cs467-images.s3-us-west-1.amazonaws.com'
+                                postObservationData(observation).then((response) => {
+                                    if (response.status == '200' || response.status == '201') {
+                                        db.transaction('observation_data_os', 'readwrite')
+                                            .objectStore('observation_data_os')
+                                            .delete(key)
+                                    }
+                                })
+                            }
+                        })
+                    } else {
+                        postObservationData(observation).then((response) => {
+                            if (response.status == '200' || response.status == '201') {
+                                db.transaction('observation_data_os', 'readwrite')
+                                    .objectStore('observation_data_os')
+                                    .delete(key)
+                            }
+                        })
+                    }
                 }) 
             })
         })
@@ -78,53 +88,47 @@ function uploadPendingObservations() {
 
 }
 
-function postImageThenObservationData(payload) {
-    // TODO create endpoint and origin for staging and production
+async function postImage(payload) {
     const img_payload = {
         "img_string": payload.img_string,
-        "file_type":  payload.image.file_type
+        "file_type":  payload.image[0].file_type
     }
-    delete payload.img_string
-    fetch('http://localhost:5000/api/s3/images', {
+
+    const [endpoint, origin] = fetchArgs('api/s3/images')
+    let response = await fetch(endpoint, {
         method: 'post',
         headers: {
             "Content-Type": "application/json",
             "Host": "localhost",
-            "Origin": "localhost"
+            "Origin": origin
         },
         body: JSON.stringify(img_payload)
     })
-    .then((response) => {
-        if (response.status == '200' || response.status == '201') {
-            response.json().then((body) => {
-                payload.image.file_name = body[0].key
-                payload.image.file_path = body[0].key
-                postObservationData(payload)
-            })
-        } else {
-            console.log(`Could not store image ${response.status}`)
-        }
-    })
-    .catch((err) => {
-        console.log(err)
-    })
+    let data = await response.json()
+    return { "status": response.status, "data": data }
 }
 
-function postObservationData(payload) {
-    const endpoint = 'http://localhost:5000/api/projects/' + payload.project_id + '/observations'
-    fetch(endpoint, {
+async function postObservationData(payload) {
+    const [endpoint, origin] = fetchArgs('api/projects/' + payload.project_id + '/observations')
+    let response = await fetch(endpoint, {
         method: 'post',
         headers: {
             "Content-Type": "application/json",
             "Host":         "localhost",
-            "Origin":       "localhost"
+            "Origin":       origin
         },
         body: JSON.stringify(payload)
     })
-    .then((response) => {
-        console.log(response)   
-    })
-    .catch((err) => {
-        console.log(err)
-    })
+    let data = await response.json()
+    return { "status": response.status, "data": data }
+}
+
+function fetchArgs(baseEndpoint) {
+    const endpoint = (self.location.hostname === "localhost") ?
+        "http://localhost:5000/" + baseEndpoint :
+        "https://cab-cs467.net:443/" + baseEndpoint
+    const origin   = (self.location.hostname === "localhost") ?
+        "localhost" :
+        "cab-cs467.net"
+    return [endpoint, origin]
 }

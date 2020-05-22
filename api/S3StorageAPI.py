@@ -62,7 +62,8 @@ def createImage():
                     return(makeResponse(msg_invl), 400)
                 else:
                     decodedImgString = base64.b64decode(content['img_string'])
-                    key              = hashlib.sha256(decodedImgString).hexdigest() + '.' + content['file_type']
+                    filename         = hashlib.sha256(decodedImgString).hexdigest()
+                    key              = filename + '.' + content['file_type']
                     bucket.upload_fileobj(BytesIO(decodedImgString), key)
                     s3.Object(bucket.name, key).wait_until_exists()
             except:
@@ -71,7 +72,7 @@ def createImage():
 
             # Write success response
             msg_pass = json.dumps([{
-                "key": key,
+                "filename": filename,
                 "self": request.url + "/api/images"}],
                 indent=4, separators=(',', ':'), default=str)
                 

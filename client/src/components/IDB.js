@@ -1,10 +1,10 @@
 export function storeInIndexedDB(newItem, imgData) {
     console.log("Adding new item to indexedDB.")
     if (imgData) {
-        var s                    = imgData.split(',')[0]
-        newItem.image            = {}
-        newItem.image.file_type  = s.substring(s.lastIndexOf('/') + 1, s.lastIndexOf(';'))
-        newItem.img_string       = imgData.split(',')[1]
+        var s                       = imgData.split(',')[0]
+        newItem.image               = [{}]
+        newItem.image[0].file_type  = s.substring(s.lastIndexOf('/') + 1, s.lastIndexOf(';'))
+        newItem.img_string          = imgData.split(',')[1]
         storeItem(newItem)
     } else {
         storeItem(newItem)
