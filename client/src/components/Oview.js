@@ -8,7 +8,11 @@ const Oview = ({ observation }) => {
                 <div key={observation.oid}>
                     <h2>{observation.title}</h2>
                     <p>{observation.notes}</p>
-                    <p>{observation.measurements}</p>
+                    {Object.keys(JSON.parse(observation.measurements)).map((keyName, i) => (
+                        <p key={i}>
+                            {keyName}: {JSON.parse(observation.measurements)[keyName]}
+                        </p>
+                    ))}
                     <p>{observation.latitude}</p>
                     <p>{observation.longitude}</p>
 
