@@ -165,6 +165,7 @@ def createProjectObservation(pid):
 
             # Check for All Required Attributes & Validate
             try:
+
                 if content["date"] and content["title"] and content["notes"]:
                     if not validateAllObservationData(content):
                         return (makeResponse(msg_invl), 400)

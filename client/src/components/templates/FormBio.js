@@ -2,16 +2,23 @@ import React, { useState, useContext } from "react";
 import Cam from '../../pages/Cam';
 import "react-popupbox/dist/react-popupbox.css"
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
+import {usePosition} from '../usePosition';
+import PropTypes from 'prop-types';
 
-function FormBio(params){
+function FormBio(params, watch, settings){
 
+    const {
+        latitude,
+        longitude,
+    } = usePosition(watch, settings);
+      
     const [date, setDate] = useState("")
     const [title, setName] = useState("")
     const [notes, setNotes] = useState("")
     const [genus, setGenus] = useState("")
     const [species, setSpecies] = useState("")
-    const [latitude, setLatitude] = useState("")
-    const [longitude, setLongitude] = useState("")
+    const [lat, setLat] = useState("")
+    const [long, setLong] = useState("")
 
     const submitForm = (e) => {
         e.preventDefault();
@@ -21,8 +28,8 @@ function FormBio(params){
         console.log({notes})
         console.log({genus})
         console.log({species})
-        console.log({latitude})
-        console.log({longitude})
+        console.log({lat})
+        console.log({long})
         console.log(JSON.parse(window.localStorage.images))
         localStorage.removeItem("images")
     }
@@ -93,7 +100,8 @@ function FormBio(params){
                 placeholder="Latitude"
                 type="text"
                 name={latitude}
-                onChange={e => setLatitude(e.target.value)}
+                value={latitude}
+                onChange={e => setLat(e.target.value)}
                 required
                 />
                 <br />
@@ -101,7 +109,8 @@ function FormBio(params){
                 placeholder="Longitude"
                 type="text"
                 name={longitude}
-                onChange={e => setLongitude(e.target.value)}
+                value={longitude}
+                onChange={e => setLong(e.target.value)}
                 required
                 />
                 <br />
@@ -116,5 +125,10 @@ function FormBio(params){
         </div>
     )
 }
+
+FormBio.propTypes = {
+    watch: PropTypes.bool,
+    settings: PropTypes.object,
+};
 
 export default FormBio
