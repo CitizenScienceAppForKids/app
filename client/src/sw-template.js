@@ -87,7 +87,7 @@ async function uploadPendingObservations() {
     })
 
 }
-
+// This is repeat code from FormPost.js - unfortunately, there is not import support for service workers...
 async function postImage(payload) {
     const img_payload = {
         "img_string": payload.img_string,

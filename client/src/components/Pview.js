@@ -35,7 +35,7 @@ const Pview = (project) => {
                     <Card.Body>
                         <div style={{display: 'flex'}}>
                             <div style={{flexGrow: '1'}}>
-                                <Card.Img variant="top" src={"http://localhost:8000" + project.image.file_path + project.image.file_name + project.image.file_type} alt="Image not found" onError={(e)=>{e.target.onerror = null; e.target.src="/images/no_image.jpg"}} />
+                                <Card.Img variant="top" src={"https://cab-cs467-images.s3-us-west-1.amazonaws.com/" + project.image.file_name} alt="Image not found" onError={(e)=>{e.target.onerror = null; e.target.src="/images/no_image.jpg"}} />
                             </div>
 
                             <div style={{flexGrow: '2', paddingRight: '40px', paddingLeft: '40px'}}>

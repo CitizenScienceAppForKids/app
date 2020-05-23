@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Oview from '../components/Oview'
 import * as QueryString from "query-string";
-import { envEndpointOrigin } from "../components/EnvHelpers.js"
+import { envEndpointOrigin } from "../components/EnvFetchHelpers.js"
 
 function Observation(oid){
     

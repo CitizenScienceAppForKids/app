@@ -50,11 +50,11 @@ const Olist = ({ observations }) => {
                         <Card.Title style={{color: '#17a2b8'}}>{observations.date}</Card.Title>
                         <Card.Text>{observations.notes}</Card.Text>
                         <div style={{display: 'flex'}}>
-                            {observations.images.map((images) => (
-                            <ListGroup key={images.iid}>
+                            {observations.images.map((image) => (
+                            <ListGroup key={image.iid}>
                                 <ListGroup.Item style={{border: 'none', padding: 5}}>
                                 
-                                    <Image src={"http://localhost:8000" + images.file_path + "/" + images.file_name + "." + images.file_type} width={50} height={50}/>
+                                    <Image src={image.file_path + "/" + image.file_name + "." + image.file_type} width={50} height={50}/>
 
                                 </ListGroup.Item>
                             </ListGroup>

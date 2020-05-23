@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Pview from '../components/Pview';
 import * as QueryString from "query-string";
-import { envEndpointOrigin } from "../components/EnvHelpers.js"
+import { envEndpointOrigin } from "../components/EnvFetchHelpers.js"
 
 function Project(props){
     const params = QueryString.parse(props.location.search);
@@ -22,7 +22,7 @@ function Project(props){
 
     useEffect(() => {
         fetchApi();
-        console.log(params)
+         // console.log(params)
     }, [params.pid]);
 
     return (

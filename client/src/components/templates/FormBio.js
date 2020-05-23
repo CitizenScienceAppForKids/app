@@ -2,10 +2,9 @@ import React, { useState, useContext } from "react";
 import Cam from '../../pages/Cam';
 import "react-popupbox/dist/react-popupbox.css"
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
-import * as IDB from '../IDB.js'
+import * as FormPost from '../FormPost.js'
 
 function FormBio(params){
-
     const [date,      setDate     ] = useState("")
     const [time,      setTime     ] = useState("")
     const [title,     setName     ] = useState("")
@@ -30,12 +29,15 @@ function FormBio(params){
         // Expecting an image dataURI to be stored in localStorage
         var imgData
         if (window.localStorage.images) {
-            imgData = JSON.parse(window.localStorage.images)[0]
+            imgData                     = JSON.parse(window.localStorage.images)[0]
+            var s                       = imgData.split(',')[0]
+            newItem.image               = [{}]
+            newItem.image[0].file_type  = s.substring(s.lastIndexOf('/') + 1, s.lastIndexOf(';'))
+            newItem.img_string          = imgData.split(',')[1]
+
             localStorage.removeItem("images")
         }
-
-        // TODO we will probably want to wrap this in a promise so we can perform some callbacks    
-        IDB.storeInIndexedDB(newItem, imgData)
+        FormPost.post(newItem)
     }
 
 
