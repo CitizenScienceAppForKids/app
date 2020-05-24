@@ -11,20 +11,20 @@ const Pcards = ({ projects }) => {
             <div>
                 <Accordion>
                     <CardColumns>
-                        {Array.isArray(projects) && projects.map((projects) => (
-                            <Card key={projects.pid}>
-                                <Card.Img variant="top" src={"http://localhost:8000" + projects.images[0].file_path + projects.images[0].file_name + projects.images[0].file_type} alt="Image not found" onError={(e)=>{e.target.onerror = null; e.target.src="/images/no_image.jpg"}} />
+                        {Array.isArray(projects) && projects.map((project, index) => (
+                            <Card key={project.pid}>
+                                <Card.Img variant="top" src={"http://localhost:8000" + project.images[0].file_path + project.images[0].file_name + project.images[0].file_type} alt="Image not found" onError={(e)=>{e.target.onerror = null; e.target.src="/images/no_image.jpg"}} />
                                 <Card.Body>
-                                    <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                                        <Card.Title>{projects.title}</Card.Title>
+                                    <Accordion.Toggle as={Button} variant="link" eventKey={index}>
+                                        {project.title}
                                     </Accordion.Toggle>
-                                    <Accordion.Collapse eventKey="0">
-                                        <Card.Text>{projects.description}</Card.Text>
+                                    <Accordion.Collapse eventKey={index}>
+                                        <Card.Text>{project.description}</Card.Text>
                                     </Accordion.Collapse>
                                 </Card.Body>
                                 <Card.Footer>
                                     <Link to={{
-                                        pathname: '/project', search: '?pid=' + projects.pid
+                                        pathname: '/project', search: '?pid=' + project.pid
                                     }}>View Project</Link>
                                 </Card.Footer>
                             </Card>
