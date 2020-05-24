@@ -124,12 +124,5 @@ async function postObservationData(payload) {
 }
 
 function fetchArgs(baseEndpoint) {
-//    const endpoint = (self.location.hostname === "localhost") ?
-//        "http://localhost:5000/" + baseEndpoint :
-//        "https://cab-cs467.net:443/" + baseEndpoint
-//    const origin   = (self.location.hostname === "localhost") ?
-//        "localhost" :
-//        "cab-cs467.net"
-//    return [endpoint, origin]
     return ["https://cab-cs467.net:443/" + baseEndpoint, "cab-cs467.net"]
 }
