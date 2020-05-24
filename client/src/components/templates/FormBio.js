@@ -3,8 +3,16 @@ import Cam from '../../pages/Cam';
 import "react-popupbox/dist/react-popupbox.css"
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
 import * as FormPost from '../FormPost.js'
+import {usePosition} from '../usePosition';
+import PropTypes from 'prop-types';
 
-function FormBio(params){
+function FormBio(params, watch, settings){
+
+    const {
+        latitude,
+        longitude,
+    } = usePosition(watch, settings);
+
     const [date,      setDate     ] = useState("")
     const [time,      setTime     ] = useState("")
     const [title,     setName     ] = useState("")
@@ -115,7 +123,8 @@ function FormBio(params){
                 placeholder="Latitude"
                 type="text"
                 name={latitude}
-                onChange={e => setLatitude(e.target.value)}
+                value={latitude}
+                onChange={e => setLat(e.target.value)}
                 required
                 />
                 <br />
@@ -123,7 +132,8 @@ function FormBio(params){
                 placeholder="Longitude"
                 type="text"
                 name={longitude}
-                onChange={e => setLongitude(e.target.value)}
+                value={longitude}
+                onChange={e => setLong(e.target.value)}
                 required
                 />
                 <br />
@@ -139,4 +149,13 @@ function FormBio(params){
     )
 }
 
+<<<<<<< HEAD
 export default FormBio
+=======
+FormBio.propTypes = {
+    watch: PropTypes.bool,
+    settings: PropTypes.object,
+};
+
+export default FormBio
+>>>>>>> master
