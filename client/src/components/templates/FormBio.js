@@ -149,13 +149,9 @@ function FormBio(params, watch, settings){
     )
 }
 
-<<<<<<< HEAD
-export default FormBio
-=======
 FormBio.propTypes = {
     watch: PropTypes.bool,
     settings: PropTypes.object,
 };
 
 export default FormBio
->>>>>>> master
