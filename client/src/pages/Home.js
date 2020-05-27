@@ -42,7 +42,7 @@ function Home(){
                     <button onClick={() => history.push('/projects')} className='w-30 grow f4 link ph3 pv2 dib white bg-light-green center'>View Projects</button>
             </div>
             <br/>
-            <div>
+            <div className='cc'>
                 <CarouselComponent />
             </div>
             <br/>
