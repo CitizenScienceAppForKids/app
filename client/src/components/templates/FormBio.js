@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import Cam from '../../pages/Cam';
 import "react-popupbox/dist/react-popupbox.css"
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
 import * as FormPost from '../FormPost.js'
@@ -17,10 +16,12 @@ function FormBio(params, watch, settings){
     const [time,      setTime     ] = useState("")
     const [title,     setName     ] = useState("")
     const [notes,     setNotes    ] = useState("")
-    const [genus,     setGenus    ] = useState("")
-    const [species,   setSpecies  ] = useState("")
-    const [latitude,  setLatitude ] = useState("")
-    const [longitude, setLongitude] = useState("")
+    const [ph,        setPh       ] = useState("")
+    const [depth,     setDepth    ] = useState("")
+    const [waterTemp, setWaterTemp] = useState("")
+    const [weather,   setWeather  ] = useState("")
+    const [lat,       setLat      ] = useState("")
+    const [long,      setLong     ] = useState("")
 
     const submitForm = (e) => {
         e.preventDefault()
@@ -29,42 +30,16 @@ function FormBio(params, watch, settings){
             date:         date + " " + time,
             title:        title,
             notes:        notes,
-            measurements: {"genus": genus, "species": species},
-            latitude:     latitude,
-            longitude:    longitude
-        }
-
-        // Expecting an image dataURI to be stored in localStorage
-        var imgData
-        if (window.localStorage.images) {
-            imgData                     = JSON.parse(window.localStorage.images)[0]
-            var s                       = imgData.split(',')[0]
-            newItem.image               = [{}]
-            newItem.image[0].file_type  = s.substring(s.lastIndexOf('/') + 1, s.lastIndexOf(';'))
-            newItem.img_string          = imgData.split(',')[1]
-
-            localStorage.removeItem("images")
+            measurements: {
+                "pH": ph,
+                "Depth (m)": depth,
+                "Water Temperature (F)": waterTemp,
+                "Weather": weather
+            },
+            latitude:     lat,
+            longitude:    long
         }
         FormPost.post(newItem)
-    }
-
-
-    const popupboxConfig = {
-        titleBar: {
-          enable: true,
-          text: 'Camera'
-        },
-        fadeIn: true,
-        fadeInSpeed: 500
-    }
-
-    function openPopupbox(value) {
-        const content = (
-          <div>
-            <Cam />
-          </div>
-        )
-        PopupboxManager.open({ content })
     }
 
     return (
@@ -104,18 +79,42 @@ function FormBio(params, watch, settings){
                 />
                 <br />
                 <input
-                placeholder="Genus"
-                type="textbox"
-                name={genus}
-                onChange={e => setGenus(e.target.value)}
+                placeholder="pH"
+                type="number"
+                min="0"
+                max="14"
+                step="0.01"
+                name={ph}
+                onChange={e => setPh(e.target.value)}
                 required
                 />
                 <br />
                 <input
-                placeholder="Species"
+                placeholder="Depth (m)"
+                type="number"
+                min="0"
+                max="12000"
+                name={depth}
+                onChange={e => setDepth(e.target.value)}
+                required
+                />
+                <br />
+                <input
+                placeholder="Water Temperature (F)"
+                type="number"
+                min="-459.67"
+                max="1000"
+                step="0.01"
+                name={waterTemp}
+                onChange={e => setWaterTemp(e.target.value)}
+                required
+                />
+                <br />
+                <input
+                placeholder="Weather"
                 type="textbox"
-                name={species}
-                onChange={e => setSpecies(e.target.value)}
+                name={weather}
+                onChange={e => setWeather(e.target.value)}
                 required
                 />
                 <br />
@@ -137,14 +136,8 @@ function FormBio(params, watch, settings){
                 required
                 />
                 <br />
-                <button
-                type="button"
-                onClick={() => openPopupbox()}
-                >Take Pic</button>
-                <br /><br />
                 <button type="submit">Submit</button>
             </form>
-            <PopupboxContainer {...popupboxConfig } />
         </div>
     )
 }

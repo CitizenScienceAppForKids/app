@@ -9,3 +9,11 @@ export function envEndpointOrigin(baseEndpoint) {
 
     return [endpoint, origin]
 }
+
+export function envImgSrc(baseSrc) {
+    const src = (process.env.REACT_APP_DEV_BUILD === "true") ?
+        "http://localhost:8000/" + baseSrc :
+        "https://cab-cs467.net:443/"  + baseSrc
+
+    return src
+}
