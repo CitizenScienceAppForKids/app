@@ -12,7 +12,6 @@ import {
   PopupboxContainer
 } from 'react-popupbox';
 
-
 const Olist = ({ observations }) => {
 
     const popupboxConfig = {
@@ -54,7 +53,7 @@ const Olist = ({ observations }) => {
                             <ListGroup key={image.iid}>
                                 <ListGroup.Item style={{border: 'none', padding: 5}}>
                                 
-                                    <Image src={image.file_path + "/" + image.file_name + "." + image.file_type} width={50} height={50}/>
+                                    <Image src={image.file_path + image.file_name + image.file_type} width={50} height={50}/>
 
                                 </ListGroup.Item>
                             </ListGroup>

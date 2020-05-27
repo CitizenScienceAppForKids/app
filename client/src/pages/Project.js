@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Pview from '../components/Pview';
 import * as QueryString from "query-string";
-import { envEndpointOrigin } from "../components/EnvFetchHelpers.js"
+import { envEndpointOrigin } from "../components/EnvHelpers.js"
 
 function Project(props){
     const params = QueryString.parse(props.location.search);

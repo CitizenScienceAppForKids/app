@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import history from '../components/history';
 import CarouselComponent from "../components/Carousel/Carousel";
 import './Home.css';
-import { envEndpointOrigin } from "../components/EnvFetchHelpers.js"
+import { envEndpointOrigin } from "../components/EnvHelpers.js"
 
 function Home(){
     const [endpoint, origin] = envEndpointOrigin('api/projects') 

@@ -58,7 +58,7 @@ async function uploadPendingObservations() {
                             if (response.status == '200' || response.status == '201') {
                                 delete observation.img_string
                                 observation.image[0].file_name = response.data[0].filename
-                                observation.image[0].file_path = 'https://cab-cs467-images.s3-us-west-1.amazonaws.com'
+                                observation.image[0].file_path = 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/'
                                 postObservationData(observation).then((response) => {
                                     if (response.status == '200' || response.status == '201') {
                                         db.transaction('observation_data_os', 'readwrite')

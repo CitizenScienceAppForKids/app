@@ -1,4 +1,4 @@
-import { envEndpointOrigin } from './EnvFetchHelpers.js'
+import { envEndpointOrigin } from './EnvHelpers.js'
 
 async function storeInIndexedDB(item) {
     let request = await window.indexedDB.open('observation_db', 3)
@@ -61,7 +61,7 @@ function sendImmediately(payload) {
             if (response.status == '200' || response.status == '201') {
                 delete payload.img_string
                 payload.image[0].file_name = response.data[0].filename
-                payload.image[0].file_path = 'https://cab-cs467-images.s3-us-west-1.amazonaws.com'
+                payload.image[0].file_path = 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/'
                 postObservationData(payload).then((response) => {
                     if (response.status == '200' || response.status == '201') {
                         // TODO

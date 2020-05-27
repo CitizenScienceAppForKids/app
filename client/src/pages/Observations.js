@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Olist from '../components/Olist';
 import * as QueryString from "query-string";
-import { envEndpointOrigin } from "../components/EnvFetchHelpers.js"
+import { envEndpointOrigin } from "../components/EnvHelpers.js"
 
 function Observations(props){
     const params = QueryString.parse(props.location.search);
