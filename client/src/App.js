@@ -42,7 +42,6 @@ function App() {
         />
         <Router history={history}>
           <NavBar />
-          <Logo />
             <Switch>
               <Route path='/' component={Home} exact />
               <Route path='/projects' component={Projects} exact />
