@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css?family=Chewy&display=swap');
+
+.Cards:hover{
+    box-shadow: 5px 10px 20px 1px rgba(0, 0, 0, 0.253) !important;
+}
+
+.Cards-body{
+    font-family: "Chewy", cursive !important;
+    padding: 1rem 0 !important;
+}
+
+.Cards-text{
+    font-family: "Chewy", cursive;
+    font-size: 0.9rem;
+    padding: 0.4rem 1.9rem;
+}
+
+.Cards-title{
+    font-size: 1.5rem !important;
+}
+
+.container-fluid.row{
+    padding-top: 1rem;
+}
+
+.overflow{
+    overflow:hidden;
+}
+
+.Cards-img-top{
+    transform: scale(1);
+    transition: transform 0.5s ease;
+}
+
+.Cards-img-top:hover{
+    transform: scale(1.8);
+}
+
+.btn{
+    font-family: "Chewy", cursive;
+}

@@ -5,6 +5,7 @@ import './Home.css';
 import Card from '../components/HowItWorks/Cards';
 import { Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import Logo from '../components/Logo/Logo'
 
 const useStyles = makeStyles({
     gridContainer: {
@@ -37,12 +38,13 @@ function Home(){
 
     return (
         <div class="flexbox-container">
+            <Logo />
             <h1 class='tc'>{'Citizen Science for Kids!'}</h1>
             <div className='tc'>
                     <button onClick={() => history.push('/projects')} className='w-30 grow f4 link ph3 pv2 dib white bg-light-green center'>View Projects</button>
             </div>
             <br/>
-            <div>
+            <div className='cc'>
                 <CarouselComponent />
             </div>
             <br/>
