@@ -1,7 +1,7 @@
 import React from 'react';
 import Tilt from 'react-tilt';
 import './Logo.css';
-import earth from './earth.png';
+import earth from './citsci.png';
 
 const Logo = () => {
     return (

@@ -1,0 +1,11 @@
+.carousel-container {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    bottom: 25%;
+    transform: translate(-50%, -50%);
+    width: 29%;
+    font-family: "Chewy", cursive;
+    font-size: 0.9rem;
+}

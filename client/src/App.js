@@ -8,7 +8,6 @@ import Observations from './pages/Observations';
 import Observation from './pages/Observation';
 import NewOb from './pages/NewOb';
 import Logo from './components/Logo/Logo';
-import CarouselComponent from './components/Carousel/Carousel';
 import Particles from 'react-particles-js';
 import './App.css';
 import history from './components/history';
@@ -22,6 +21,14 @@ const particlesOptions = {
             density: {
                 enable: true,
                 value_area: 800
+            }
+        }
+    },
+    interactivity: {
+        events: {
+            "onhover": {
+                "enable": true,
+                "mode": "repulse"
             }
         }
     }
