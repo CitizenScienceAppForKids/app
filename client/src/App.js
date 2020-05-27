@@ -8,7 +8,6 @@ import Observations from './pages/Observations';
 import Observation from './pages/Observation';
 import NewOb from './pages/NewOb';
 import Logo from './components/Logo/Logo';
-import CarouselComponent from './components/Carousel/Carousel';
 import Particles from 'react-particles-js';
 import './App.css';
 import history from './components/history';
@@ -24,6 +23,14 @@ const particlesOptions = {
                 value_area: 800
             }
         }
+    },
+    interactivity: {
+        events: {
+            "onhover": {
+                "enable": true,
+                "mode": "repulse"
+            }
+        }
     }
 }
 
@@ -35,7 +42,6 @@ function App() {
         />
         <Router history={history}>
           <NavBar />
-          <Logo />
             <Switch>
               <Route path='/' component={Home} exact />
               <Route path='/projects' component={Projects} exact />

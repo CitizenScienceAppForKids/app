@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Pcards from "../components/Pcards"
 import { envEndpointOrigin } from "../components/EnvHelpers.js"
+import Pcards from "../components/Pcards/Pcards"
 
 function Projects(){
     const [data, setData] = useState([]);
