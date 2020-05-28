@@ -20,7 +20,7 @@ function FormBio(params, watch, settings){
     const [lat, setLat] = useState("")
     const [long, setLong] = useState("")
 
-    const submitForm = (e) => {
+    const submitForm = (e,props) => {
         e.preventDefault();
         console.log(params.id)
         console.log({date})
@@ -28,10 +28,14 @@ function FormBio(params, watch, settings){
         console.log({notes})
         console.log({genus})
         console.log({species})
-        console.log({lat})
-        console.log({long})
-        console.log(JSON.parse(window.localStorage.images))
-        localStorage.removeItem("images")
+        console.log({latitude})
+        console.log({longitude})
+        if (window.localStorage.images){
+            console.log(JSON.parse(window.localStorage.images))
+            localStorage.removeItem("images")
+        }
+
+        window.location.replace('/observations?pid=' + params.id)
     }
 
     const popupboxConfig = {
