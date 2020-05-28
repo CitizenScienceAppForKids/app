@@ -63,8 +63,6 @@ const Pview = (project) => {
                             </div>
                         </Card>
                     </div>
-                       
-                    <Link to={"/newobservation?pid=" + project.pid + "&type=" + project.type} >Create New Observation</Link>
 
                 </Card>
             </div>
