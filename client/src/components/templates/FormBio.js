@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { Redirect } from 'react-router-dom'
 import Cam from '../../pages/Cam';
 import "react-popupbox/dist/react-popupbox.css"
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';

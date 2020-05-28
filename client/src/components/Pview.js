@@ -5,6 +5,8 @@ import Map from './Map'
 
 const Pview = (project) => {
 
+    console.log(project.images)
+
     const [data, setData] = useState([]);
     const fetchApi = async () => {
 
@@ -26,40 +28,45 @@ const Pview = (project) => {
     return (
         <div>
         {project.project.map((project) => (
+
             <div>
+                <Card key={project.pid} className="bg-dark text-white">
+                    
+                    <Card.Img src={"http://localhost:8000/banners/Ocean.jpg"} width="962px" height="270px" alt="Card image" />
+                    {/* <Card.Img src={"http://localhost:8000" + project.image.file_path + "/" + project.image.file_name + "." + project.image.file_type + "/100px270"} alt="Card image" /> */}
+                    <Card.ImgOverlay>
+                        <Card.Title>{project.title}</Card.Title>
+                    </Card.ImgOverlay>
+                </Card>
+
                 <Card key={project.pid}>
-                    <Card.Header >
-                        {project.title}
-                        <span style={{float: 'right', color: '#17a2b8'}}>{project.type}</span>
-                    </Card.Header>
-                    <Card.Body>
-                        <div style={{display: 'flex'}}>
-                            <div style={{flexGrow: '1'}}>
-                                <Card.Img variant="top" src={"http://localhost:8000" + project.image.file_path + project.image.file_name + project.image.file_type} alt="Image not found" onError={(e)=>{e.target.onerror = null; e.target.src="/images/no_image.jpg"}} />
-                            </div>
 
-                            <div style={{flexGrow: '2', paddingRight: '40px', paddingLeft: '40px'}}>
-                                <Card.Text style={{clear: 'both'}}>{project.description}</Card.Text>
-                            </div>
+                    <div style={{display: 'flex', alignItems: 'stretch'}}>
+                        <Card style={{flex: '1 1 0px', padding: '40px', border: 'none', margin: 'auto'}}>
+                            {project.description}
+                        </Card>
 
-                            <div style={{flexGrow: '1', textAlign: 'center', padding: '20px'}}>
-                            <Link to={{
-                                        pathname: '/observations', search: '?pid=' + project.pid
-                            }}>
-                                <h4 style={{color: '#17a2b8'}}>Observations</h4>
-                            </Link>
+                        <Card style={{flex: '1 1 0px', padding: '40px', textAlign: 'center', border: 'none', margin: 'auto'}}>
+                            <h3 style={{color: '#FF00E2'}}>Observations</h3>
                             <Card.Text style={{fontSize: '80px'}}>{data.length}</Card.Text>
+                            <div style={{display: 'flex', fontSize: '20px', margin: 'auto'}}>
+                                <Link style={{color: '#B2009E', paddingRight: '10px'}} to={{ pathname: '/observations', search: '?pid=' + project.pid }}>View All</Link>
+                                <span style={{color: '#B2009E'}}>|</span>
+                                <Link style={{color: '#B2009E', paddingLeft: '10px'}} to={"/newobservation?pid=" + project.pid + "&type=" + project.type}>
+                                    <span style={{paddingRight: '10px'}}>Add</span><img src={"./images/add.png"} width="25px" height="25px" alt="Card image" />
+                                </Link>
                             </div>
-                        </div>
+                        </Card>
 
-                        <Link to={"/newobservation?pid=" + project.pid + "&type=" + project.type} >Create New Observation</Link>
-                        <div style={{display: 'flex'}}>
-                            <div style={{flexGrow: '1', textAlign: 'center', padding: '20px', marginLeft: '25%', marginRight: '25%'}}>
+                        <Card  style={{flex: '1 1 0px', padding: '40px', border: 'none'}}>
+                            <div style={{ flexGrow: '1', paddingRight: '40px', paddingLeft: '40px'}}>
                                 <Map pMap = {data} />
                             </div>
-                        </div>
+                        </Card>
+                    </div>
+                       
+                    <Link to={"/newobservation?pid=" + project.pid + "&type=" + project.type} >Create New Observation</Link>
 
-                    </Card.Body>
                 </Card>
             </div>
         ))}

@@ -18,7 +18,7 @@ const Olist = ({ observations }) => {
     const popupboxConfig = {
         titleBar: {
           enable: true,
-          text: 'Observation'
+          text: 'observation'
         },
         fadeIn: true,
         fadeInSpeed: 500
@@ -37,29 +37,16 @@ const Olist = ({ observations }) => {
     return (
         <div>
 
-
         <ListGroup>
         {observations.map((observations) => (
             <ListGroupItem key={observations.oid}>
                 <Card>
-                    <Card.Header>{observations.title} 
-                        <Button value={observations.oid} onClick={(e) => openPopupbox(e.target.value)} size="sm" style={{float: 'right', backgroundColor: '#17a2b8', borderColor: '#17a2b8'}}>View</Button>
+                    <Card.Header style={{color: '#B2009E'}}>{observations.title} 
+                        <Button value={observations.oid} onClick={(e) => openPopupbox(e.target.value)} size="sm" style={{float: 'right', backgroundColor: '#B2009E', borderColor: '#FF00E2'}}>View</Button>
                     </Card.Header>
-                        
                     <Card.Body>
-                        <Card.Title style={{color: '#17a2b8'}}>{observations.date}</Card.Title>
+                        <p style={{color: '#FF00E2'}}>{observations.date} </p>
                         <Card.Text>{observations.notes}</Card.Text>
-                        <div style={{display: 'flex'}}>
-                            {observations.images.map((images) => (
-                            <ListGroup key={images.iid}>
-                                <ListGroup.Item style={{border: 'none', padding: 5}}>
-                                
-                                    <Image src={"http://localhost:8000" + images.file_path + "/" + images.file_name + "." + images.file_type} width={50} height={50}/>
-
-                                </ListGroup.Item>
-                            </ListGroup>
-                            ))}
-                        </div>
                     </Card.Body>
                 </Card>
             </ListGroupItem>
@@ -68,7 +55,6 @@ const Olist = ({ observations }) => {
         <PopupboxContainer {...popupboxConfig } />
         </div>
     )
-
 };
 
 export default Olist
