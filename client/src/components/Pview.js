@@ -32,8 +32,7 @@ const Pview = (project) => {
             <div>
                 <Card key={project.pid} className="bg-dark text-white">
                     
-                    <Card.Img src={"http://localhost:8000/banners/Ocean.jpg"} width="962px" height="270px" alt="Card image" />
-                    {/* <Card.Img src={"http://localhost:8000" + project.image.file_path + "/" + project.image.file_name + "." + project.image.file_type + "/100px270"} alt="Card image" /> */}
+                    <Card.Img src={"http://localhost:8000" + project.image.file_path + project.image.file_name + "2" + project.image.file_type} width="962px" height="270px" alt="Card image" />
                     <Card.ImgOverlay>
                         <Card.Title>{project.title}</Card.Title>
                     </Card.ImgOverlay>
