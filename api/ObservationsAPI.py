@@ -76,7 +76,7 @@ def createObservation():
                 pass
 
             # Check for optional field
-            if "measurments" not in content:
+            if "measurements" not in content:
                 content["measurements"] = ""
             # Check for optional field
             if "latitude" not in content:
@@ -89,7 +89,7 @@ def createObservation():
             con = dbconnect()
             cursor = con.cursor()
             query = "INSERT INTO observations (date, title, notes, measurements, latitude, longitude) VALUES (%s, %s, %s, %s, %s, %s)"
-            recordTuple = (content["date"], content["title"], content["notes"], content["measurements"], content["latitude"], content["longitude"])
+            recordTuple = (content["date"], content["title"], content["notes"], json.dumps(content["measurements"]), content["latitude"], content["longitude"])
             cursor.execute(query, recordTuple)
             con.commit()
             new_id = cursor.lastrowid
@@ -189,7 +189,7 @@ def createProjectObservation(pid):
                 pass
 
             # Check for optional field
-            if "measurments" not in content:
+            if "measurements" not in content:
                 content["measurements"] = ""
             # Check for optional field
             if "latitude" not in content:
@@ -202,7 +202,7 @@ def createProjectObservation(pid):
             con = dbconnect()
             cursor = con.cursor()
             query = "INSERT INTO observations (date, title, notes, measurements, latitude, longitude, project_id) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-            recordTuple = (content["date"], content["title"], content["notes"], content["measurements"], content["latitude"], content["longitude"], pid)
+            recordTuple = (content["date"], content["title"], content["notes"], json.dumps(content["measurements"]), content["latitude"], content["longitude"], pid)
             cursor.execute(query, recordTuple)
             con.commit()
             new_id = cursor.lastrowid
@@ -256,7 +256,6 @@ def createProjectObservation(pid):
                     disconnect(con)
             except:
                 pass
-
             return(makeResponse(msg_fail), 500)
     
 ## -------------------------------------------##
