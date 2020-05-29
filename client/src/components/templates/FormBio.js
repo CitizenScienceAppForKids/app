@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Cam from '../../pages/Cam';
 import "react-popupbox/dist/react-popupbox.css"
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
@@ -17,8 +17,13 @@ function FormBio(params, watch, settings){
     const [notes, setNotes] = useState("")
     const [genus, setGenus] = useState("")
     const [species, setSpecies] = useState("")
-    const [lat, setLat] = useState("")
-    const [long, setLong] = useState("")
+    const [lat, setLat] = useState(latitude)
+    const [long, setLong] = useState(longitude)
+
+    useEffect(() => {
+        setLat(latitude);
+        setLong(longitude);
+    }, [latitude, longitude]);
 
     const submitForm = (e,props) => {
         e.preventDefault();
@@ -28,8 +33,8 @@ function FormBio(params, watch, settings){
         console.log({notes})
         console.log({genus})
         console.log({species})
-        console.log({latitude})
-        console.log({longitude})
+        console.log({lat})
+        console.log({long})
         if (window.localStorage.images){
             console.log(JSON.parse(window.localStorage.images))
             localStorage.removeItem("images")
@@ -104,7 +109,7 @@ function FormBio(params, watch, settings){
                 placeholder="Latitude"
                 type="text"
                 name={latitude}
-                value={latitude}
+                defaultValue={lat}
                 onChange={e => setLat(e.target.value)}
                 required
                 />
@@ -113,7 +118,7 @@ function FormBio(params, watch, settings){
                 placeholder="Longitude"
                 type="text"
                 name={longitude}
-                value={longitude}
+                defaultValue={long}
                 onChange={e => setLong(e.target.value)}
                 required
                 />
