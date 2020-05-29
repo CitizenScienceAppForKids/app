@@ -411,7 +411,7 @@ def viewAllProjectObservations(pid):
         try:
             con = dbconnect()
             query = ("SELECT oid, title, date, notes, measurements, latitude, longitude, project_id from observations "
-                    "WHERE project_id = " + pid + ";")
+                    "WHERE project_id = " + pid + " ORDER BY date desc;")
             cursor = con.cursor()
             cursor.execute(query)
             row_headers=[x[0] for x in cursor.description]

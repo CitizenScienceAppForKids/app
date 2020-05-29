@@ -23,7 +23,7 @@ function FormBio(params, watch, settings){
     const [lat,       setLat      ] = useState("")
     const [long,      setLong     ] = useState("")
 
-    const submitForm = (e) => {
+    const submitForm = (e,props) => {
         e.preventDefault()
         let newItem = { 
             project_id:   params.id,
@@ -40,6 +40,7 @@ function FormBio(params, watch, settings){
             longitude:    long
         }
         FormPost.post(newItem)
+        window.location.replace('/observations?pid=' + params.id)
     }
 
     return (

@@ -37,7 +37,7 @@ const Map = (observations) => {
           </Geographies>
           {markers.map(({ name, coordinates, markerOffset }) => (
             <Marker key={name} coordinates={coordinates}>
-              <circle r={10} fill="#F00" stroke="#fff" strokeWidth={2} />
+              <circle r={10} fill="#FF00E2" stroke="#fff" strokeWidth={2} />
               <text
                 textAnchor="middle"
                 y={markerOffset}
