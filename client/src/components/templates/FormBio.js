@@ -5,6 +5,7 @@ import * as FormPost from '../FormPost.js'
 import {usePosition} from '../usePosition';
 import PropTypes from 'prop-types';
 import './form-style.css'
+import { LoadingSpinnerComponent } from './formSpinner.js'
 
 function FormBio(params, watch, settings){
 
@@ -46,11 +47,11 @@ function FormBio(params, watch, settings){
             longitude: long
         }
         FormPost.post(newItem)
-        window.location.replace('/observations?pid=' + params.id)
     }
 
     return (
         <div>
+            <LoadingSpinnerComponent />
             <h2>Enter a new observation below:</h2>
             <form onSubmit = {submitForm} >
                 <input

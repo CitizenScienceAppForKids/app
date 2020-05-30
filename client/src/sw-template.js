@@ -48,34 +48,31 @@ async function uploadPendingObservations() {
     request.addEventListener('success', (e) => {
         db = e.target.result;
         transaction = db.transaction('observation_data_os', 'readwrite').objectStore('observation_data_os')
-        transaction.getAllKeys().addEventListener('success', (e) => {
+        transaction.getAllKeys().addEventListener('success', async (e) => {
             e.target.result.forEach((key) => {
-                transaction.get(key).addEventListener('success', (e) => {
-                    console.log(`Observation ${e.target.result}`)
+                transaction.get(key).addEventListener('success', async (e) => {
                     observation = e.target.result
                     if (observation.img_string) {
-                        postImage(observation).then((response) => {
-                            if (response.status == '200' || response.status == '201') {
-                                delete observation.img_string
-                                observation.image[0].file_name = response.data[0].filename
-                                observation.image[0].file_path = 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/'
-                                postObservationData(observation).then((response) => {
-                                    if (response.status == '200' || response.status == '201') {
-                                        db.transaction('observation_data_os', 'readwrite')
-                                            .objectStore('observation_data_os')
-                                            .delete(key)
-                                    }
-                                })
-                            }
-                        })
-                    } else {
-                        postObservationData(observation).then((response) => {
-                            if (response.status == '200' || response.status == '201') {
+                        let response = await postImage(observation)
+                        if (response.status == '200' || response.status == '201') {
+                            let data = await response.json()
+                            delete observation.img_string
+                            observation.image[0].file_name = data[0].filename
+                            observation.image[0].file_path = 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/'
+                            let oresponse = await postObservationData(observation)
+                            if (oresponse.status == '200' || oresponse.status == '201') {
                                 db.transaction('observation_data_os', 'readwrite')
                                     .objectStore('observation_data_os')
                                     .delete(key)
                             }
-                        })
+                        }
+                    } else {
+                        let response = await postObservationData(observation)
+                        if (response.status == '200' || response.status == '201') {
+                            db.transaction('observation_data_os', 'readwrite')
+                                .objectStore('observation_data_os')
+                                .delete(key)
+                        }
                     }
                 }) 
             })
@@ -95,7 +92,7 @@ async function postImage(payload) {
     }
 
     const [endpoint, origin] = fetchArgs('api/s3/images')
-    let response = await fetch(endpoint, {
+    return fetch(endpoint, {
         method: 'post',
         headers: {
             "Content-Type": "application/json",
@@ -104,13 +101,11 @@ async function postImage(payload) {
         },
         body: JSON.stringify(img_payload)
     })
-    let data = await response.json()
-    return { "status": response.status, "data": data }
 }
 
 async function postObservationData(payload) {
     const [endpoint, origin] = fetchArgs('api/projects/' + payload.project_id + '/observations')
-    let response = await fetch(endpoint, {
+    return fetch(endpoint, {
         method: 'post',
         headers: {
             "Content-Type": "application/json",
@@ -119,8 +114,6 @@ async function postObservationData(payload) {
         },
         body: JSON.stringify(payload)
     })
-    let data = await response.json()
-    return { "status": response.status, "data": data }
 }
 
 function fetchArgs(baseEndpoint) {

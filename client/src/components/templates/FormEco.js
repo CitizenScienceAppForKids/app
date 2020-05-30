@@ -6,6 +6,7 @@ import * as FormPost from '../FormPost.js'
 import {usePosition} from '../usePosition';
 import PropTypes from 'prop-types';
 import './form-style.css'
+import { LoadingSpinnerComponent } from './formSpinner.js'
 
 function FormEco(params, watch, settings){
 
@@ -57,7 +58,6 @@ function FormEco(params, watch, settings){
             localStorage.removeItem("images")
         }
         FormPost.post(newItem)
-        window.location.replace('/observations?pid=' + params.id)
     }
 
 
@@ -81,6 +81,7 @@ function FormEco(params, watch, settings){
 
     return (
         <div >
+            <LoadingSpinnerComponent />
             <h2>Enter a new observation below:</h2>
             <form onSubmit = {submitForm} >
                 <input
