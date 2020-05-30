@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Cam from '../../pages/Cam';
 import "react-popupbox/dist/react-popupbox.css"
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
 import * as FormPost from '../FormPost.js'
@@ -38,10 +37,10 @@ function FormBio(params, watch, settings){
             title:        title,
             notes:        notes,
             measurements: {
-                "pH": ph,
-                "Depth (m)": depth,
+                "pH":                    ph,
+                "Depth (m)":             depth,
                 "Water Temperature (F)": waterTemp,
-                "Weather": weather
+                "Weather":               weather
             },
             latitude:  lat,
             longitude: long
