@@ -1,4 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect } from "react";
+import Cam from '../../pages/Cam';
 import "react-popupbox/dist/react-popupbox.css"
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
 import * as FormPost from '../FormPost.js'
@@ -23,6 +24,11 @@ function FormBio(params, watch, settings){
     const [weather,   setWeather  ] = useState("")
     const [lat,       setLat      ] = useState("")
     const [long,      setLong     ] = useState("")
+
+    useEffect(() => {
+        setLat(latitude);
+        setLong(longitude);
+    }, [latitude, longitude]);
 
     const submitForm = (e, props) => {
         e.preventDefault()
@@ -133,7 +139,7 @@ function FormBio(params, watch, settings){
                 placeholder="Latitude"
                 type="text"
                 name={latitude}
-                defaultValue={latitude}
+                defaultValue={lat}
                 onChange={e => setLat(e.target.value)}
                 required
                 />
@@ -143,7 +149,7 @@ function FormBio(params, watch, settings){
                 placeholder="Longitude"
                 type="text"
                 name={longitude}
-                defaultValue={longitude}
+                defaultValue={long}
                 onChange={e => setLong(e.target.value)}
                 required
                 />
