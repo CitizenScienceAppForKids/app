@@ -63,7 +63,7 @@ def createImage():
                 else:
                     decodedImgString = base64.b64decode(content['img_string'])
                     filename         = hashlib.sha256(decodedImgString).hexdigest()
-                    key              = filename + '.' + content['file_type']
+                    key              = filename + content['file_type']
                     bucket.upload_fileobj(BytesIO(decodedImgString), key)
                     s3.Object(bucket.name, key).wait_until_exists()
             except:

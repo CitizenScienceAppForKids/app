@@ -44,7 +44,7 @@ const Oview = ({ observation }) => {
                             <ListGroup key={images.iid}>
                                 <ListGroup.Item style={{border: 'none', padding: 5}}>
                                 
-                                    <Image src={"http://localhost:8000" + images.file_path + "/" + images.file_name + "." + images.file_type} width={200} height={200}/>
+                                    <Image src={images.file_path + images.file_name + images.file_type} width={200} height={200}/>
 
                                 </ListGroup.Item>
                             </ListGroup>

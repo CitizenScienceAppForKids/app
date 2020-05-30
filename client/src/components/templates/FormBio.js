@@ -4,6 +4,7 @@ import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
 import * as FormPost from '../FormPost.js'
 import {usePosition} from '../usePosition';
 import PropTypes from 'prop-types';
+import './form-style.css'
 
 function FormBio(params, watch, settings){
 
@@ -23,9 +24,9 @@ function FormBio(params, watch, settings){
     const [lat,       setLat      ] = useState("")
     const [long,      setLong     ] = useState("")
 
-    const submitForm = (e,props) => {
+    const submitForm = (e, props) => {
         e.preventDefault()
-        let newItem = { 
+        let newItem = {
             project_id:   params.id,
             date:         date + " " + time,
             title:        title,
@@ -36,8 +37,8 @@ function FormBio(params, watch, settings){
                 "Water Temperature (F)": waterTemp,
                 "Weather": weather
             },
-            latitude:     lat,
-            longitude:    long
+            latitude:  lat,
+            longitude: long
         }
         FormPost.post(newItem)
         window.location.replace('/observations?pid=' + params.id)
@@ -45,9 +46,10 @@ function FormBio(params, watch, settings){
 
     return (
         <div>
-            <h2>Biology Observation Form</h2>
+            <h2>Enter a new observation below:</h2>
             <form onSubmit = {submitForm} >
                 <input
+                class="input"
                 placeholder="Date"
                 type="date"
                 name={date}
@@ -55,6 +57,7 @@ function FormBio(params, watch, settings){
                 required
                 />
                 <input
+                class="input"
                 placeholder="Time"
                 type="time"
                 step="1"
@@ -64,6 +67,7 @@ function FormBio(params, watch, settings){
                 />
                 <br />
                 <input
+                class="input"
                 placeholder="Title"
                 type="text"
                 name={title}
@@ -72,6 +76,7 @@ function FormBio(params, watch, settings){
                 />
                 <br />
                 <input
+                class="input"
                 placeholder="Notes"
                 type="textbox"
                 name={notes}
@@ -80,6 +85,7 @@ function FormBio(params, watch, settings){
                 />
                 <br />
                 <input
+                class="input"
                 placeholder="pH"
                 type="number"
                 min="0"
@@ -91,6 +97,7 @@ function FormBio(params, watch, settings){
                 />
                 <br />
                 <input
+                class="input"
                 placeholder="Depth (m)"
                 type="number"
                 min="0"
@@ -101,6 +108,7 @@ function FormBio(params, watch, settings){
                 />
                 <br />
                 <input
+                class="input"
                 placeholder="Water Temperature (F)"
                 type="number"
                 min="-459.67"
@@ -112,6 +120,7 @@ function FormBio(params, watch, settings){
                 />
                 <br />
                 <input
+                class="input"
                 placeholder="Weather"
                 type="textbox"
                 name={weather}
@@ -120,19 +129,21 @@ function FormBio(params, watch, settings){
                 />
                 <br />
                 <input
+                class="input"
                 placeholder="Latitude"
                 type="text"
                 name={latitude}
-                value={latitude}
+                defaultValue={latitude}
                 onChange={e => setLat(e.target.value)}
                 required
                 />
                 <br />
                 <input
+                class="input"
                 placeholder="Longitude"
                 type="text"
                 name={longitude}
-                value={longitude}
+                defaultValue={longitude}
                 onChange={e => setLong(e.target.value)}
                 required
                 />

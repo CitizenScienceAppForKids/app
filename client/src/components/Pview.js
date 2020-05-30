@@ -2,19 +2,22 @@ import React, { useEffect, useState } from 'react'
 import { Link } from "react-router-dom";
 import Card from 'react-bootstrap/Card'
 import Map from './Map'
+import { envEndpointOrigin } from './EnvHelpers.js'
 
 const Pview = (project) => {
 
     console.log(project.images)
 
+    const [endpoint, origin] = envEndpointOrigin('api/projects/' + project.id + '/observations')
     const [data, setData] = useState([]);
     const fetchApi = async () => {
 
-        await fetch('http://localhost:5000/api/projects/' + project.id + '/observations', {
+        await fetch(endpoint, {
             method: "GET",
             headers: {
                 "content-type": "application/json",
-                "Access-Control-Allow-Origin": "http://localhost:3000"
+                "Host": "localhost",
+                "Origin": origin
             },
         })
         .then((r) => r.json())
@@ -32,7 +35,7 @@ const Pview = (project) => {
             <div>
                 <Card key={project.pid} className="bg-dark text-white">
                     
-                    <Card.Img src={"http://localhost:8000" + project.image.file_path + project.image.file_name + "2" + project.image.file_type} width="100%" alt="Card image" />
+                    <Card.Img src={project.image.file_path + project.image.file_name + "2" + project.image.file_type} width="100%" alt="Card image" />
                     <Card.ImgOverlay>
                         <Card.Title>{project.title}</Card.Title>
                     </Card.ImgOverlay>
