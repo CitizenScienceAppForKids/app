@@ -6,6 +6,7 @@ import * as FormPost from '../FormPost.js'
 import {usePosition} from '../usePosition';
 import PropTypes from 'prop-types';
 import './form-style.css'
+import { LoadingSpinnerComponent } from './formSpinner.js'
 
 function FormEco(params, watch, settings){
 
@@ -56,8 +57,20 @@ function FormEco(params, watch, settings){
 
             localStorage.removeItem("images")
         }
-        FormPost.post(newItem)
-        window.location.replace('/observations?pid=' + params.id)
+
+        if (!window.navigator.onLine && 'serviceWorker' in navigator ) {
+            FormPost.storeInIndexedDB(newItem)
+            alert("Your device appears to be offline. We will attempt to upload you observation once connectivity is restored. Please check back to make sure your observation was recored.")
+            window.location.replace('/observations?pid=' + params.id)
+        } else {
+            FormPost.sendImmediately(newItem).then((response) => {
+                if (response.status == '200' || response.status == '201') {
+                    window.location.replace('/observations?pid=' + params.id)
+                } else {
+                    alert(`Your observation could not be saved. Please try again!\nError code: ${response.status}`)
+                }
+            })
+        }
     }
 
 
@@ -81,6 +94,7 @@ function FormEco(params, watch, settings){
 
     return (
         <div >
+            <LoadingSpinnerComponent />
             <h2>Enter a new observation below:</h2>
             <form onSubmit = {submitForm} >
                 <input

@@ -1,6 +1,7 @@
 import { envEndpointOrigin } from './EnvHelpers.js'
+import { trackPromise } from 'react-promise-tracker'
 
-async function storeInIndexedDB(item) {
+export async function storeInIndexedDB(item) {
     let request = await window.indexedDB.open('observation_db', 3)
     request.onerror = function() {
         console.log('Database failed to open')
@@ -55,36 +56,20 @@ async function storeInIndexedDB(item) {
     }
 }
 
-function sendImmediately(payload) {
+export async function sendImmediately(payload) {
     if (payload.img_string) {
-        postImage(payload).then((response) => {
-            if (response.status == '200' || response.status == '201') {
-                delete payload.img_string
-                payload.image[0].file_name = response.data[0].filename
-                payload.image[0].file_path = 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/'
-                postObservationData(payload).then((response) => {
-                    if (response.status == '200' || response.status == '201') {
-                        // TODO
-                        console.log('New observation saved successfully.')
-                    }
-                })
-            }
-        })
+        let response = await trackPromise(postImage(payload))
+        if (response.status == '200' || response.status == '201') {
+             let data = await response.json()
+             delete payload.img_string
+             payload.image[0].file_name = data[0].filename
+             payload.image[0].file_path = 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/'
+             return trackPromise(postObservationData(payload))
+         } else {
+             return response
+         }
     } else {
-        postObservationData(payload).then((response) => {
-            if (response.status == '200' || response.status == '201') {
-                // TODO
-                console.log('New observation stored successfully.')
-            }
-        })
-    }
-}
-
-export function post(newItem) {
-     if (!window.navigator.onLine && 'serviceWorker' in navigator ) {
-        storeInIndexedDB(newItem)
-    } else {
-        sendImmediately(newItem)
+        return trackPromise(postObservationData(payload))
     }
 }
 
@@ -95,7 +80,7 @@ async function postImage(payload) {
     }
 
     const [endpoint, origin] = envEndpointOrigin('api/s3/images')
-    let response = await fetch(endpoint, {
+    return fetch(endpoint, {
         method: 'post',
         headers: {
             "Content-Type": "application/json",
@@ -104,13 +89,11 @@ async function postImage(payload) {
         },
         body: JSON.stringify(img_payload)
     })
-    let data = await response.json()
-    return { "status": response.status, "data": data }
 }
 
 async function postObservationData(payload) {
     const [endpoint, origin] = envEndpointOrigin('api/projects/' + payload.project_id + '/observations')
-    let response = await fetch(endpoint, {
+    return fetch(endpoint, {
         method: 'post',
         headers: {
             "Content-Type": "application/json",
@@ -119,6 +102,4 @@ async function postObservationData(payload) {
         },
         body: JSON.stringify(payload)
     })
-    let data = await response.json()
-    return { "status": response.status, "data": data }
 }
