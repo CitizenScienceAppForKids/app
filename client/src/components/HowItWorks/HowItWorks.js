@@ -21,7 +21,7 @@ const ProcessCard = props => {
             <div className="cards-body text-dark">
                 <h4 className="cards-title"> {props.title} </h4>
                     <p className="cards-text text-secondary">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book
+                    { props.body }
                     </p>
                     <a href='/projects' className="btn btn-outline-success">Learn More</a>
             </div>

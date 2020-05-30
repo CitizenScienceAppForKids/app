@@ -5,6 +5,7 @@ from flask_limiter.util import get_remote_address
 from api.ProjectsAPI import projects_api
 from api.ObservationsAPI import observations_api
 from api.ImagesAPI import images_api
+from api.S3StorageAPI import s3_storage_api
 from api.functions.utilities import *
 from json2html import *
 import json
@@ -27,7 +28,7 @@ def create_app():
     app.register_blueprint(projects_api)
     app.register_blueprint(observations_api)
     app.register_blueprint(images_api)
-    app.register_blueprint(mod)
+    app.register_blueprint(s3_storage_api)
     return app
 
 
@@ -37,7 +38,7 @@ cors = CORS(app)
 CORS(projects_api)
 CORS(observations_api)
 CORS(images_api)
-CORS(mod)
+CORS(s3_storage_api)
 
 limiter = Limiter(
     app,

@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
 import Oview from '../components/Oview'
+import * as QueryString from "query-string";
+import { envEndpointOrigin } from "../components/EnvHelpers.js"
 
 function Observation(oid){
     
 
     const [data, setData] = useState([]);
+    const [endpoint, origin] = envEndpointOrigin('api/observations/') 
     const fetchApi = async () => {
-        await fetch('http://localhost:5000/api/observations/' + oid.obs, {
+        await fetch(endpoint + oid.obs, {
             method: "GET",
             headers: {
                 "content-type": "application/json",
-                "Access-Control-Allow-Origin": "http://localhost:3000"
+                "Host": "localhost",
+                "Origin": origin
             },
         })
         .then((r) => r.json())

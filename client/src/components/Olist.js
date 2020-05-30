@@ -12,7 +12,6 @@ import {
   PopupboxContainer
 } from 'react-popupbox';
 
-
 const Olist = ({ observations }) => {
 
     const popupboxConfig = {
@@ -47,6 +46,7 @@ const Olist = ({ observations }) => {
                     <Card.Body>
                         <p style={{color: '#FF00E2'}}>{observations.date} </p>
                         <Card.Text>{observations.notes}</Card.Text>
+
                     </Card.Body>
                 </Card>
             </ListGroupItem>
