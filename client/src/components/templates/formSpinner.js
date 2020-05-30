@@ -12,8 +12,8 @@ const { promiseInProgress } = usePromiseTracker()
     {
       (promiseInProgress === true) ?
         <Loader
-         type="Puff"
-         color="#00BFFF"
+         type="Rings"
+         color="#B2009E"
          height={100}
          width={100}
          timeout={3000} //3 secs

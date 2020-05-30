@@ -57,20 +57,7 @@ function FormEco(params, watch, settings){
 
             localStorage.removeItem("images")
         }
-
-        if (!window.navigator.onLine && 'serviceWorker' in navigator ) {
-            FormPost.storeInIndexedDB(newItem)
-            alert("Your device appears to be offline. We will attempt to upload you observation once connectivity is restored. Please check back to make sure your observation was recored.")
-            window.location.replace('/observations?pid=' + params.id)
-        } else {
-            FormPost.sendImmediately(newItem).then((response) => {
-                if (response.status == '200' || response.status == '201') {
-                    window.location.replace('/observations?pid=' + params.id)
-                } else {
-                    alert(`Your observation could not be saved. Please try again!\nError code: ${response.status}`)
-                }
-            })
-        }
+        FormPost.post(newItem)
     }
 
 
