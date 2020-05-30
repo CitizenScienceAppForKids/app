@@ -29,8 +29,8 @@ const Pview = (project) => {
         <div>
         {project.project.map((project) => (
 
-            <div>
-                <Card key={project.pid} className="bg-dark text-white">
+            <div key={project.pid}>
+                <Card className="bg-dark text-white">
                     
                     <Card.Img src={"http://localhost:8000" + project.image.file_path + project.image.file_name + "2" + project.image.file_type} width="100%" alt="Card image" />
                     <Card.ImgOverlay>
@@ -38,7 +38,7 @@ const Pview = (project) => {
                     </Card.ImgOverlay>
                 </Card>
 
-                <Card key={project.pid}>
+                <Card >
 
                     <div style={{display: 'flex', alignItems: 'stretch'}}>
                         <Card style={{flex: '1 1 0px', padding: '40px', border: 'none', margin: 'auto'}}>
