@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Cam from '../../pages/Cam';
 import "react-popupbox/dist/react-popupbox.css"
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
 import * as FormPost from '../FormPost.js'
@@ -45,6 +46,24 @@ function FormCli(params, watch, settings){
             longitude:    long
         }
         FormPost.post(newItem)
+    }
+
+    const popupboxConfig = {
+        titleBar: {
+          enable: true,
+          text: 'Camera'
+        },
+        fadeIn: true,
+        fadeInSpeed: 500
+    }
+
+    function openPopupbox(value) {
+        const content = (
+          <div>
+            <Cam />
+          </div>
+        )
+        PopupboxManager.open({ content })
     }
 
     return (
@@ -143,8 +162,15 @@ function FormCli(params, watch, settings){
                 required
                 />
                 <br />
+                <button
+                class="input"
+                type="button"
+                onClick={() => openPopupbox()}
+                >Take Pic</button>
+                <br /><br />
                 <button type="submit">Submit</button>
             </form>
+            <PopupboxContainer {...popupboxConfig } />
         </div>
     )
 }

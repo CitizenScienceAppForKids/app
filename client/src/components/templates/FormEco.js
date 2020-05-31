@@ -169,6 +169,7 @@ function FormEco(params, watch, settings){
                 />
                 <br />
                 <button
+                class="input"
                 type="button"
                 onClick={() => openPopupbox()}
                 >Take Pic</button>

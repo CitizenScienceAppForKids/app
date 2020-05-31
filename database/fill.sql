@@ -14,6 +14,12 @@ INSERT INTO `images` (observation, file_name, file_type, file_path) VALUES (2, '
 INSERT INTO `images` (observation, file_name, file_type, file_path) VALUES (3, 'frog1', '.jpg', 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/');
 INSERT INTO `images` (observation, file_name, file_type, file_path) VALUES (4, 'deer1', '.jpg', 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/');
 INSERT INTO `images` (observation, file_name, file_type, file_path) VALUES (5, 'clownfish1', '.jpg', 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/');
+INSERT INTO `images` (observation, file_name, file_type, file_path) VALUES (6, 'alcatraz', '.jpg', 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/');
+INSERT INTO `images` (observation, file_name, file_type, file_path) VALUES (7, 'madagascar', '.jpg', 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/');
+INSERT INTO `images` (observation, file_name, file_type, file_path) VALUES (8, 'mallorca', '.jpg', 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/');
+INSERT INTO `images` (observation, file_name, file_type, file_path) VALUES (9, 'snow', '.jpg', 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/');
+INSERT INTO `images` (observation, file_name, file_type, file_path) VALUES (10, 'rain', '.jpg', 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/');
+INSERT INTO `images` (observation, file_name, file_type, file_path) VALUES (11, 'hail', '.jpg', 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/');
 INSERT INTO `images` (project, file_name, file_type, file_path) VALUES (1, 'ecology', '.jpg', 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/banners/');
 INSERT INTO `images` (project, file_name, file_type, file_path) VALUES (2, 'biology', '.jpg', 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/banners/');
 INSERT INTO `images` (project, file_name, file_type, file_path) VALUES (3, 'climatology', '.jpg', 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/banners/');

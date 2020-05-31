@@ -12,7 +12,7 @@ const { promiseInProgress } = usePromiseTracker()
     {
       (promiseInProgress === true) ?
         <Loader
-         type="Rings"
+         type="TailSpin"
          color="#B2009E"
          height={100}
          width={100}
