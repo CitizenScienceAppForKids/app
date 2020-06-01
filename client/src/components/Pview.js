@@ -15,7 +15,8 @@ const Pview = (project) => {
             method: "GET",
             headers: {
                 "content-type": "application/json",
-                "Access-Control-Allow-Origin": "http://localhost:3000"
+                "Host": "localhost",
+                "Origin": origin
             },
         })
         .then((r) => r.json())
@@ -33,7 +34,7 @@ const Pview = (project) => {
             <div key={project.pid}>
                 <Card className="bg-dark text-white">
                     
-                    <Card.Img src={"http://localhost:8000" + project.image.file_path + project.image.file_name + "2" + project.image.file_type} width="100%" alt="Card image" />
+                    <Card.Img src={project.image.file_path + project.image.file_name + "2" + project.image.file_type} width="100%" alt="Card image" />
                     <Card.ImgOverlay>
                         <Card.Title>{project.title}</Card.Title>
                     </Card.ImgOverlay>

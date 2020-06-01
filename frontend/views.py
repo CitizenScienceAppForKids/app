@@ -5,9 +5,26 @@ from flask import (
     render_template,
     request,
     url_for,
+    current_app,
 )
+import base64
 
 mod = Blueprint('site', __name__, template_folder='templates', static_folder='static', static_url_path='/webapp/static')
+
+@mod.route('/sw.js', methods=['GET'])
+def sw():
+    return mod.send_static_file('sw.js')
+
+@mod.route('/test_image_upload', methods=['GET', 'POST'])
+def image_upload():
+    return render_template('public/test_image_upload.html')
+
+@mod.route('/decode', methods=['GET', 'POST'])
+def decode():
+    s = request.json
+    d = base64.b64decode(s['base64_string'])
+    current_app.logger.debug("%s is the decoded string", d)
+    return "Works"
 
 @mod.route('/')
 def homepage():

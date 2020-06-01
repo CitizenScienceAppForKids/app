@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import history from '../components/history';
 import CarouselComponent from "../components/Carousel/Carousel";
 import './Home.css';
+import { envEndpointOrigin } from "../components/EnvHelpers.js"
 import Card from '../components/HowItWorks/Cards';
 import { Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -17,8 +18,7 @@ const useStyles = makeStyles({
 
 function Home(){
     const classes = useStyles();
-	const endpoint = (process.env.NODE_ENV === "production") ? "https://cab-cs467.net:443/api/projects" : "http://localhost:5000/api/projects"
-	const origin   = (process.env.NODE_ENV === "production") ? "cab-cs467.net" : "localhost"
+    const [endpoint, origin] = envEndpointOrigin('api/projects') 
     const [data, setData] = useState([]);
     const fetchApi = async () => {
         await fetch(endpoint, {

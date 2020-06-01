@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import Pview from '../components/Pview';
 import * as QueryString from "query-string";
+import { envEndpointOrigin } from "../components/EnvHelpers.js"
 
 function Project(props){
     const params = QueryString.parse(props.location.search);
     const [data, setData] = useState([]);
-    const endpoint = 'http://localhost:5000/api/projects/${params.pd}' + params.pid
+    const [endpoint, origin] = envEndpointOrigin(`api/projects/${params.pid}`) 
     const fetchApi = async () => {
-        await fetch(`http://localhost:5000/api/projects/${params.pid}`, {
+        await fetch(endpoint, {
             method: "GET",
             headers: {
                 "content-type": "application/json",
-                "Access-Control-Allow-Origin": "http://localhost:3000"
+                "Host": "localhost",
+                "Origin": origin
             },
         })
         .then((r) => r.json())
@@ -20,7 +22,7 @@ function Project(props){
 
     useEffect(() => {
         fetchApi();
-        console.log(params)
+         // console.log(params)
     }, [params.pid]);
 
     return (
