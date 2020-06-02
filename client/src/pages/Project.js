@@ -20,7 +20,6 @@ function Project(props){
 
     useEffect(() => {
         fetchApi();
-        console.log(params)
     }, [params.pid]);
 
     return (

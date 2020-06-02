@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 
+//  Code taken from component documentation at:  
+//  https://www.npmjs.com/package/react-popupbox
+//  https://fraina.github.io/react-popupbox/
+//
+//  Credit these site for significant portions of this code
+
 function FormBio(){
     const [date, setDate] = useState("")
     const [title, setName] = useState("")
