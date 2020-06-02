@@ -8,23 +8,20 @@ import PropTypes from 'prop-types';
 import './form-style.css'
 import { LoadingSpinnerComponent } from './formSpinner.js'
 
-<<<<<<< HEAD
+
 //  Code taken from component documentation at:  
 //  https://www.npmjs.com/package/react-popupbox
 //  https://fraina.github.io/react-popupbox/
 //
 //  Credit these site for significant portions of this code
 
+function FormCli(params, watch, settings){
 
-function FormBio(){
     const [date, setDate] = useState("")
     const [title, setName] = useState("")
     const [notes, setNotes] = useState("")
     const [latitude, setLatitude] = useState("")
     const [longitude, setLongitude] = useState("")
-=======
-function FormCli(params, watch, settings){
->>>>>>> 041db99c7448c588a6201081457e3420cca50ee7
 
     const {
         latitude,

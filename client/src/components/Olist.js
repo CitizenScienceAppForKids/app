@@ -12,16 +12,12 @@ import {
   PopupboxContainer
 } from 'react-popupbox';
 
-<<<<<<< HEAD
 //  Code taken from component documentation at:  
 //  https://www.npmjs.com/package/react-popupbox
 //  https://fraina.github.io/react-popupbox/
 //
 //  Credit these site for significant portions of this code
 
-
-=======
->>>>>>> 041db99c7448c588a6201081457e3420cca50ee7
 const Olist = ({ observations }) => {
 
     const popupboxConfig = {

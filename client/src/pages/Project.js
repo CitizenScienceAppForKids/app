@@ -22,10 +22,6 @@ function Project(props){
 
     useEffect(() => {
         fetchApi();
-<<<<<<< HEAD
-=======
-         // console.log(params)
->>>>>>> 041db99c7448c588a6201081457e3420cca50ee7
     }, [params.pid]);
 
     return (
