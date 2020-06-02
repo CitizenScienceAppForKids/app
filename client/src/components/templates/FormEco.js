@@ -15,11 +15,6 @@ import { LoadingSpinnerComponent } from './formSpinner.js'
 //  Credit these site for significant portions of this code
 
 function FormEco(params, watch, settings){
-    const [date, setDate] = useState("")
-    const [title, setName] = useState("")
-    const [notes, setNotes] = useState("")
-    const [latitude, setLatitude] = useState("")
-    const [longitude, setLongitude] = useState("")
 
     const {
         latitude,

@@ -10,6 +10,12 @@ import { LoadingSpinnerComponent } from './formSpinner.js'
 
 function FormBio(params, watch, settings){
 
+    //  Code taken from component documentation at:  
+    //  https://www.npmjs.com/package/react-popupbox
+    //  https://fraina.github.io/react-popupbox/
+    //
+    //  Credit these site for significant portions of this code
+
     const {
         latitude,
         longitude,

@@ -17,12 +17,6 @@ import { LoadingSpinnerComponent } from './formSpinner.js'
 
 function FormCli(params, watch, settings){
 
-    const [date, setDate] = useState("")
-    const [title, setName] = useState("")
-    const [notes, setNotes] = useState("")
-    const [latitude, setLatitude] = useState("")
-    const [longitude, setLongitude] = useState("")
-
     const {
         latitude,
         longitude,
