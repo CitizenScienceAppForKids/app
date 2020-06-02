@@ -4,7 +4,7 @@ LABEL maintainer="garouttc@oregonstate.edu"
 
 WORKDIR /app
 
-COPY . /app
+ADD deploy/requirements.txt deploy/requirements.txt
 
 # Install dependencies
 RUN apk add --update --no-cache \
@@ -20,6 +20,8 @@ RUN apk add --update --no-cache \
 		nodejs npm
 
 RUN pip3 install -r deploy/requirements.txt
+
+COPY . /app
 
 # Create the nginx_runner user to run the nginx server
 RUN addgroup -S nginx_runner && adduser -S --no-create-home nginx_runner -G nginx_runner 

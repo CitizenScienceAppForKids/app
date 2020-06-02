@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import Cam from '../../pages/Cam';
 import "react-popupbox/dist/react-popupbox.css"
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
+import * as FormPost from '../FormPost.js'
 import {usePosition} from '../usePosition';
 import PropTypes from 'prop-types';
+import './form-style.css'
+import { LoadingSpinnerComponent } from './formSpinner.js'
 
 function FormBio(params, watch, settings){
 
@@ -11,36 +14,40 @@ function FormBio(params, watch, settings){
         latitude,
         longitude,
     } = usePosition(watch, settings);
-      
-    const [date, setDate] = useState("")
-    const [title, setName] = useState("")
-    const [notes, setNotes] = useState("")
-    const [genus, setGenus] = useState("")
-    const [species, setSpecies] = useState("")
-    const [lat, setLat] = useState(latitude)
-    const [long, setLong] = useState(longitude)
+
+    const [date,      setDate     ] = useState("")
+    const [time,      setTime     ] = useState("")
+    const [title,     setName     ] = useState("")
+    const [notes,     setNotes    ] = useState("")
+    const [ph,        setPh       ] = useState("")
+    const [depth,     setDepth    ] = useState("")
+    const [waterTemp, setWaterTemp] = useState("")
+    const [weather,   setWeather  ] = useState("")
+    const [lat,       setLat      ] = useState("")
+    const [long,      setLong     ] = useState("")
 
     useEffect(() => {
         setLat(latitude);
         setLong(longitude);
     }, [latitude, longitude]);
 
-    const submitForm = (e,props) => {
-        e.preventDefault();
-        console.log(params.id)
-        console.log({date})
-        console.log({title})
-        console.log({notes})
-        console.log({genus})
-        console.log({species})
-        console.log({lat})
-        console.log({long})
-        if (window.localStorage.images){
-            console.log(JSON.parse(window.localStorage.images))
-            localStorage.removeItem("images")
+    const submitForm = (e, props) => {
+        e.preventDefault()
+        let newItem = {
+            project_id:   params.id,
+            date:         date + " " + time,
+            title:        title,
+            notes:        notes,
+            measurements: {
+                "pH":                    ph,
+                "Depth (m)":             depth,
+                "Water Temperature (F)": waterTemp,
+                "Weather":               weather
+            },
+            latitude:  lat,
+            longitude: long
         }
-
-        window.location.replace('/observations?pid=' + params.id)
+        FormPost.post(newItem)
     }
 
     const popupboxConfig = {
@@ -63,17 +70,29 @@ function FormBio(params, watch, settings){
 
     return (
         <div>
-            <h2>Biology Observation Form</h2>
+            <LoadingSpinnerComponent />
+            <h2>Enter a new observation below:</h2>
             <form onSubmit = {submitForm} >
                 <input
+                class="input"
                 placeholder="Date"
-                type="datetime-local"
+                type="date"
                 name={date}
                 onChange={e => setDate(e.target.value)}
                 required
                 />
+                <input
+                class="input"
+                placeholder="Time"
+                type="time"
+                step="1"
+                name={time}
+                onChange={e => setTime(e.target.value)}
+                required
+                />
                 <br />
                 <input
+                class="input"
                 placeholder="Title"
                 type="text"
                 name={title}
@@ -82,6 +101,7 @@ function FormBio(params, watch, settings){
                 />
                 <br />
                 <input
+                class="input"
                 placeholder="Notes"
                 type="textbox"
                 name={notes}
@@ -90,22 +110,51 @@ function FormBio(params, watch, settings){
                 />
                 <br />
                 <input
-                placeholder="Genus"
-                type="textbox"
-                name={genus}
-                onChange={e => setGenus(e.target.value)}
+                class="input"
+                placeholder="pH"
+                type="number"
+                min="0"
+                max="14"
+                step="0.01"
+                name={ph}
+                onChange={e => setPh(e.target.value)}
                 required
                 />
                 <br />
                 <input
-                placeholder="Species"
-                type="textbox"
-                name={species}
-                onChange={e => setSpecies(e.target.value)}
+                class="input"
+                placeholder="Depth (m)"
+                type="number"
+                min="0"
+                max="12000"
+                name={depth}
+                onChange={e => setDepth(e.target.value)}
                 required
                 />
                 <br />
                 <input
+                class="input"
+                placeholder="Water Temperature (F)"
+                type="number"
+                min="-459.67"
+                max="1000"
+                step="0.01"
+                name={waterTemp}
+                onChange={e => setWaterTemp(e.target.value)}
+                required
+                />
+                <br />
+                <input
+                class="input"
+                placeholder="Weather"
+                type="textbox"
+                name={weather}
+                onChange={e => setWeather(e.target.value)}
+                required
+                />
+                <br />
+                <input
+                class="input"
                 placeholder="Latitude"
                 type="text"
                 name={latitude}
@@ -115,6 +164,7 @@ function FormBio(params, watch, settings){
                 />
                 <br />
                 <input
+                class="input"
                 placeholder="Longitude"
                 type="text"
                 name={longitude}
@@ -124,6 +174,7 @@ function FormBio(params, watch, settings){
                 />
                 <br />
                 <button
+                class="input"
                 type="button"
                 onClick={() => openPopupbox()}
                 >Take Pic</button>

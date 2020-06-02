@@ -10,13 +10,16 @@ class Cards extends Component {
             <div className='container-fluid d-flex justify-content-center'>
                 <div className='row'>
                     <div className='col-md-4'>
-                        <ProcessCard imgsrc={img1} title="View A Project"/>
+                        <ProcessCard imgsrc={img1} title="View A Project" body="We have assembled three projects to choose
+                        from covering a range of scientific topics that you can help contribute to."/>
                     </div>
                     <div className='col-md-4'>
-                        <ProcessCard imgsrc={img2} title="Record Your Observations"/>
+                        <ProcessCard imgsrc={img2} title="Record Your Observations" body="Each project has a specific
+                        type of observation. Choose a project to get started."/>
                     </div>
                     <div className='col-md-4'>
-                        <ProcessCard imgsrc={img3} title="Collaborate"/>
+                        <ProcessCard imgsrc={img3} title="Collaborate" body="By participating in Citizen Science, you
+                        become a collaborator with other citizen scientists and help further scientific endeavors."/>
                     </div>
                 </div>
             </div>

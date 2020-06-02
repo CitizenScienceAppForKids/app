@@ -15,7 +15,7 @@ const Pcards = ({ projects }) => {
                         {Array.isArray(projects) && projects.map((project, index) => (
                             <Card key={project.pid}>
                                 <div className='overflow'>
-                                    <Card.Img className="Cards-img-top" variant="top" src={"http://localhost:8000" + project.images[0].file_path + project.images[0].file_name + project.images[0].file_type} alt="Image not found" onError={(e)=>{e.target.onerror = null; e.target.src="/images/no_image.jpg"}} />
+                                    <Card.Img className="Cards-img-top" variant="top" src={project.images[0].file_path + project.images[0].file_name + project.images[0].file_type} alt="Image not found" onError={(e)=>{e.target.onerror = null; e.target.src="/images/no_image.jpg"}} />
                                 </div>
                                 <div className='Cards-body text-dark'>
                                     <Card.Body>
