@@ -25,23 +25,17 @@ const Oview = ({ observation }) => {
                             <hr />
                             
                             {Object.keys(JSON.parse(observation.measurements)).map((keyName, i) => (
-                                <table key={i}> 
-                                <tr>
-                                    <td style={{width: '100px'}}>
-                                        <b style={{paddingLeft: '25px', color: '#FF00E2'}}>{keyName}:</b>
-                                    </td>
-                                    <td>
-                                        {JSON.parse(observation.measurements)[keyName]}
-                                    </td>
-                                </tr>
-                           </table>
+                                <div key={i}>
+                                    <b style={{color: '#FF00E2'}}>{keyName}</b>
+                                    <p>{JSON.parse(observation.measurements)[keyName]}</p>
+                                </div>
                             ))}
                             <hr />
                             <h5 style={{color: '#B2009E'}}> Images </h5>
                             <hr />
                             <div style={{display: 'flex'}}>
                             {observation.images.map((images) => (
-                            <ListGroup key={images.iid}>
+                            <ListGroup horizontal={"sm"} key={images.iid}>
                                 <ListGroup.Item style={{border: 'none', padding: 5}}>
                                 
                                     <Image src={images.file_path + images.file_name + images.file_type} width={200} height={200}/>
