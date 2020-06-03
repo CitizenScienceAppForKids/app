@@ -12,6 +12,7 @@ from api.functions.utilities import *
 def makeResponse(message):
     rsp_json = make_response(message)
     rsp_json.headers.set('Content-Type', 'application/json')
+    rsp_json.headers.set('Cache-Control', 'max-age=1, stale-while-revalidate=3600')
     return rsp_json
 
 
