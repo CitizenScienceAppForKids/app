@@ -12,6 +12,12 @@ import {
   PopupboxContainer
 } from 'react-popupbox';
 
+//  Code taken from component documentation at:  
+//  https://www.npmjs.com/package/react-popupbox
+//  https://fraina.github.io/react-popupbox/
+//
+//  Credit these site for significant portions of this code
+
 const Olist = ({ observations }) => {
 
     const popupboxConfig = {
@@ -20,7 +26,13 @@ const Olist = ({ observations }) => {
           text: 'observation'
         },
         fadeIn: true,
-        fadeInSpeed: 500
+        fadeInSpeed: 500, 
+        content: {
+            style: {
+                height: '90vh',
+                overflow: 'auto'
+            }
+        }
       }
 
 

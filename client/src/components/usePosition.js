@@ -1,5 +1,13 @@
 import {useState, useEffect} from 'react';
 
+//  Code taken from component documentation at:
+//  https://www.npmjs.com/package/use-position
+//
+//  Additional code and reference from:
+//  https://itnext.io/creating-react-useposition-hook-for-getting-browsers-geolocation-2f27fc1d96de
+//
+//  Credit this site for significant portions of this code
+
 const defaultSettings = {
   enableHighAccuracy: false,
   timeout: Infinity,

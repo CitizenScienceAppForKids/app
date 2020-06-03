@@ -2,6 +2,12 @@ import React, { createContext, useContext } from 'react';
 import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 
+//  Code taken from component documentation at:
+//  https://www.npmjs.com/package/react-html5-camera-photo
+//
+//  Credit this site for significant portions of this code
+
+
 function Cam (props) {
 
   function handleTakePhoto (dataUri) {

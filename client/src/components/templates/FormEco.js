@@ -8,6 +8,12 @@ import PropTypes from 'prop-types';
 import './form-style.css'
 import { LoadingSpinnerComponent } from './formSpinner.js'
 
+//  Code taken from component documentation at:  
+//  https://www.npmjs.com/package/react-popupbox
+//  https://fraina.github.io/react-popupbox/
+//
+//  Credit these site for significant portions of this code
+
 function FormEco(params, watch, settings){
 
     const {

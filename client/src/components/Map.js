@@ -7,6 +7,13 @@ import {
   ZoomableGroup
 } from "react-simple-maps";
 
+
+//  Code taken from component documentation at: 
+//  https://www.react-simple-maps.io/
+//
+//  Credit these site for significant portions of this code
+
+
 const Map = (observations) => {
 
   const geoUrl =
