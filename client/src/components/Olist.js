@@ -26,7 +26,13 @@ const Olist = ({ observations }) => {
           text: 'observation'
         },
         fadeIn: true,
-        fadeInSpeed: 500
+        fadeInSpeed: 500, 
+        content: {
+            style: {
+                height: '90vh',
+                overflow: 'auto'
+            }
+        }
       }
 
 

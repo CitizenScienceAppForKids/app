@@ -33,7 +33,7 @@ const Oview = ({ observation }) => {
                             <hr />
                             <h5 style={{color: '#B2009E'}}> Images </h5>
                             <hr />
-                            <div style={{display: 'flex'}}>
+                            <div style={{display: 'flex', flexWrap: 'wrap'}}>
                             {observation.images.map((images) => (
                             <ListGroup horizontal={"sm"} key={images.iid}>
                                 <ListGroup.Item style={{border: 'none', padding: 5}}>
