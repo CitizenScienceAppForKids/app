@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Redirect } from 'react-router-dom'
 import Cam from '../../pages/Cam';
 import "react-popupbox/dist/react-popupbox.css"
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
@@ -9,6 +10,7 @@ import './form-style.css'
 import { LoadingSpinnerComponent } from './formSpinner.js'
 
 function FormBio(params, watch, settings){
+    const [submitted,  setSubmitted ] = useState(false)
 
     const {
         latitude,
@@ -48,6 +50,9 @@ function FormBio(params, watch, settings){
             longitude: long
         }
         FormPost.post(newItem)
+        .then(() => {
+            setSubmitted(true)
+        })
     }
 
     const popupboxConfig = {
@@ -182,6 +187,7 @@ function FormBio(params, watch, settings){
                 <button type="submit">Submit</button>
             </form>
             <PopupboxContainer {...popupboxConfig } />
+            {submitted && <Redirect to={'/observations?pid=' + params.id} />}
         </div>
     )
 }

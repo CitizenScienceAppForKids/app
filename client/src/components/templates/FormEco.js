@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Redirect } from 'react-router-dom'
 import Cam from '../../pages/Cam';
 import "react-popupbox/dist/react-popupbox.css"
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
@@ -9,6 +10,7 @@ import './form-style.css'
 import { LoadingSpinnerComponent } from './formSpinner.js'
 
 function FormEco(params, watch, settings){
+    const [submitted,  setSubmitted ] = useState(false)
 
     const {
         latitude,
@@ -58,6 +60,9 @@ function FormEco(params, watch, settings){
             localStorage.removeItem("images")
         }
         FormPost.post(newItem)
+        .then(() => {
+            setSubmitted(true)
+        })
     }
 
 
@@ -177,8 +182,11 @@ function FormEco(params, watch, settings){
                 <button type="submit">Submit</button>
             </form>
             <PopupboxContainer {...popupboxConfig } />
+            {submitted && <Redirect to={'/observations?pid=' + params.id} />}
         </div>
+
     )
+
 }
 
 FormEco.propTypes = {
