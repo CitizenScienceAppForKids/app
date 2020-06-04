@@ -4,6 +4,7 @@ if ('function' === typeof importScripts) {
   importScripts(
     'https://storage.googleapis.com/workbox-cdn/releases/3.5.0/workbox-sw.js'
   );
+
   /* global workbox */
   if (workbox) {
     console.log('Workbox is loaded');
@@ -12,8 +13,21 @@ if ('function' === typeof importScripts) {
     workbox.precaching.precacheAndRoute([]);
 
     workbox.routing.registerRoute(
+      new RegExp('/*.html'),
+      new workbox.strategies.NetworkFirst({
+        cacheName: 'pages',
+        plugins: [
+          new workbox.expiration.Plugin({
+            maxEntries: 60,
+            maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+          }),
+        ],
+      })
+    );
+
+    workbox.routing.registerRoute(
       /\.(?:png|gif|jpg|jpeg)$/,
-      workbox.strategies.cacheFirst({
+      new workbox.strategies.StaleWhileRevalidate({
         cacheName: 'images',
         plugins: [
           new workbox.expiration.Plugin({
@@ -39,38 +53,43 @@ self.addEventListener('sync', (e) => {
 
 async function uploadPendingObservations() {
     let db
+    let observations = []
     var request = indexedDB.open("observation_db")
     request.addEventListener('success', (e) => {
         db = e.target.result;
-        transaction = db.transaction('observation_data_os', 'readwrite').objectStore('observation_data_os')
-        transaction.getAllKeys().addEventListener('success', async (e) => {
-            e.target.result.forEach((key) => {
-                transaction.get(key).addEventListener('success', async (e) => {
-                    observation = e.target.result
-                    if (observation.img_string) {
-                        let response = await postImage(observation)
+        db.transaction('observation_data_os', 'readwrite')
+        .objectStore('observation_data_os')
+        .openCursor().addEventListener('success', async (e) => {
+            let cursor = e.target.result
+            if (cursor) {
+                observations.push({key: cursor.primaryKey, data: cursor.value})
+                cursor.continue()
+            } else {
+                observations.forEach( async (observation) => {
+                    if (observation.data.img_string) {
+                        let response = await postImage(observation.data)
                         if (response.status == '200' || response.status == '201') {
                             let data = await response.json()
-                            delete observation.img_string
-                            observation.image[0].file_name = data[0].filename
-                            observation.image[0].file_path = 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/'
-                            let oresponse = await postObservationData(observation)
+                            delete observation.data.img_string
+                            observation.data.image[0].file_name = data[0].filename
+                            observation.data.image[0].file_path = 'https://cab-cs467-images.s3-us-west-1.amazonaws.com/'
+                            let oresponse = await postObservationData(observation.data)
                             if (oresponse.status == '200' || oresponse.status == '201') {
                                 db.transaction('observation_data_os', 'readwrite')
                                     .objectStore('observation_data_os')
-                                    .delete(key)
+                                    .delete(observation.key)
                             }
                         }
                     } else {
-                        let response = await postObservationData(observation)
+                        let response = await postObservationData(observation.data)
                         if (response.status == '200' || response.status == '201') {
                             db.transaction('observation_data_os', 'readwrite')
                                 .objectStore('observation_data_os')
-                                .delete(key)
+                                .delete(observation.key)
                         }
                     }
-                }) 
-            })
+                })
+            }
         })
     })
 

@@ -117,23 +117,27 @@ async function postObservationData(payload) {
     })
 }
 
-export function post(newItem) {
-    if (!window.navigator.onLine && 'serviceWorker' in navigator ) {
-        storeInIndexedDB(newItem).then((e) => {
-            alert("Your device appears to be offline. We will attempt to upload your observation once connectivity is restored. Please check back to make sure your observation was recored.")
-            window.location.replace('/observations?pid=' + newItem.project_id)
-        })
-        .catch((e) => {
-             alert("Your device appears to be offline. We tried to store your obseration to upload later, but something went wrong. Please try again.")
-        })
-    } else {
-        sendImmediately(newItem).then((response) => {
-            if (response.status == '200' || response.status == '201') {
-                window.location.replace('/observations?pid=' + newItem.project_id)
-            } else {
-                alert(`Your observation could not be saved. Please try again!\nError code: ${response.status}`)
-            }
-        })
-    }
+export async function post(newItem) {
+    return new Promise( (resolve, reject) => {
+        if (!window.navigator.onLine && 'serviceWorker' in navigator ) {
+            storeInIndexedDB(newItem).then((e) => {
+                alert("Your device appears to be offline. We will attempt to upload your observation once connectivity is restored. Please check back to make sure your observation was recored.")
+                resolve()
+            })
+            .catch((e) => {
+                 alert("Your device appears to be offline. We tried to store your obseration to upload later, but something went wrong. Please try again.")
+                 reject()
+            })
+        } else {
+            sendImmediately(newItem).then((response) => {
+                if (response.status == '200' || response.status == '201') {
+                    resolve()
+                } else {
+                    alert(`Your observation could not be saved. Please try again!\nError code: ${response.status}`)
+                    reject()
+                }
+            })
+        }
+    })
 }
 
