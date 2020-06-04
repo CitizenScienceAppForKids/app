@@ -54,6 +54,19 @@ function FormCli(params, watch, settings){
             latitude:     lat,
             longitude:    long
         }
+
+        // Expecting an image dataURI to be stored in localStorage
+        var imgData
+        if (window.localStorage.images) {
+            imgData                     = JSON.parse(window.localStorage.images)[0]
+            var s                       = imgData.split(',')[0]
+            newItem.image               = [{}]
+            newItem.image[0].file_type  = '.' + s.substring(s.lastIndexOf('/') + 1, s.lastIndexOf(';'))
+            newItem.img_string          = imgData.split(',')[1]
+
+            window.localStorage.removeItem("images")
+        }
+
         FormPost.post(newItem)
         .then(() => {
             setSubmitted(true)
@@ -105,6 +118,7 @@ function FormCli(params, watch, settings){
                 class="input"
                 placeholder="Title"
                 type="text"
+                maxlength="100"
                 name={title}
                 onChange={e => setName(e.target.value)}
                 required
@@ -114,6 +128,7 @@ function FormCli(params, watch, settings){
                 class="input"
                 placeholder="Notes"
                 type="textbox"
+                maxlength="1000"
                 name={notes}
                 onChange={e => setNotes(e.target.value)}
                 required

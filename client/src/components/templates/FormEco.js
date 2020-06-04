@@ -63,8 +63,9 @@ function FormEco(params, watch, settings){
             newItem.image[0].file_type  = '.' + s.substring(s.lastIndexOf('/') + 1, s.lastIndexOf(';'))
             newItem.img_string          = imgData.split(',')[1]
 
-            localStorage.removeItem("images")
+            window.localStorage.removeItem("images")
         }
+
         FormPost.post(newItem)
         .then(() => {
             setSubmitted(true)
@@ -118,6 +119,7 @@ function FormEco(params, watch, settings){
                 class="input"
                 placeholder="Title"
                 type="text"
+                maxlength="100"
                 name={title}
                 onChange={e => setName(e.target.value)}
                 required
@@ -127,6 +129,7 @@ function FormEco(params, watch, settings){
                 class="input"
                 placeholder="Notes"
                 type="textbox"
+                maxlength="1000"
                 name={notes}
                 onChange={e => setNotes(e.target.value)}
                 required
